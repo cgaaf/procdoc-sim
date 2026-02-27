@@ -1,0 +1,178 @@
+<script lang="ts">
+	import type {
+		FindingsGroupSection,
+		FindingsItem,
+		FindingRow as FindingRowType,
+		FindingsSubHeader
+	} from '$lib/types/procdoc-definition';
+	import FindingToggleButton from './FindingToggleButton.svelte';
+	import FindingsButtonGroup from './FindingsButtonGroup.svelte';
+	import RepeatProcedureWidget from './RepeatProcedureWidget.svelte';
+	import LimitationsWidget from './LimitationsWidget.svelte';
+
+	let {
+		findingsGroups,
+		limitationOptions = [],
+		helperText,
+		showRepeatProcedure = true
+	}: {
+		findingsGroups: FindingsGroupSection[];
+		limitationOptions?: string[];
+		helperText?: string;
+		showRepeatProcedure?: boolean;
+	} = $props();
+
+	let collapsed = $state<Set<string>>(new Set());
+
+	function toggleCollapse(header: string) {
+		const next = new Set(collapsed);
+		if (next.has(header)) {
+			next.delete(header);
+		} else {
+			next.add(header);
+		}
+		collapsed = next;
+	}
+
+	function hasSubHeaders(items: FindingsItem[]): boolean {
+		return items.some((item) => item.kind === 'subHeader');
+	}
+
+	function splitBySubHeader(
+		items: FindingsItem[]
+	): { header: string; items: FindingsItem[] }[] {
+		const columns: { header: string; items: FindingsItem[] }[] = [];
+		let currentHeader: string | null = null;
+		let currentItems: FindingsItem[] = [];
+
+		for (const item of items) {
+			if (item.kind === 'subHeader') {
+				if (currentHeader != null) {
+					columns.push({ header: currentHeader, items: currentItems });
+					currentItems = [];
+				}
+				currentHeader = item.title;
+			} else {
+				currentItems.push(item);
+			}
+		}
+		if (currentHeader != null) {
+			columns.push({ header: currentHeader, items: currentItems });
+		}
+		return columns;
+	}
+</script>
+
+{#snippet findingsItem(item: FindingsItem)}
+	{#if item.kind === 'findingRow'}
+		<FindingToggleButton finding={item} />
+	{:else if item.kind === 'buttonGroup'}
+		<FindingsButtonGroup group={item} />
+	{/if}
+{/snippet}
+
+{#snippet findingsContent(items: FindingsItem[])}
+	{#if hasSubHeaders(items)}
+		{@const columns = splitBySubHeader(items)}
+		<div class="flex gap-2 pl-5">
+			{#each columns as col}
+				<div class="flex-1">
+					<p
+						class="mb-1.5 mt-0.5 font-epic text-[13px] font-bold"
+						style:color="var(--color-text-heading)"
+					>
+						{col.header}
+					</p>
+					{#each col.items as item}
+						{@render findingsItem(item)}
+					{/each}
+				</div>
+			{/each}
+		</div>
+	{:else}
+		{@const rows = items.filter((i): i is FindingRowType => i.kind === 'findingRow')}
+		{@const mid = Math.ceil(rows.length / 2)}
+		<div class="flex gap-2 pl-5">
+			<div class="flex-1 pr-2">
+				{#each rows.slice(0, mid) as row}
+					<FindingToggleButton finding={row} />
+				{/each}
+			</div>
+			<div class="flex-1">
+				{#each rows.slice(mid) as row}
+					<FindingToggleButton finding={row} />
+				{/each}
+			</div>
+		</div>
+	{/if}
+{/snippet}
+
+<div class="px-3">
+	{#if helperText}
+		<p
+			class="whitespace-pre-line pl-5 pt-1 pb-2 font-epic text-[13px] italic"
+			style:color="var(--color-text-heading)"
+		>
+			{helperText}
+		</p>
+	{/if}
+
+	{#each findingsGroups as group}
+		<div class="mb-3">
+			{#if group.header === ''}
+				<!-- Headerless section -->
+				<div class="border-t" style:border-color="var(--color-divider)"></div>
+				{#if group.label}
+					<div class="flex items-center gap-1.5 pb-1.5 pl-5">
+						<span
+							class="font-epic text-[13px] font-bold"
+							style:color="var(--color-text-heading)"
+						>
+							{group.label}
+						</span>
+						{#if group.required}
+							<span class="font-epic text-[11px] font-semibold text-red-500">Required</span>
+						{/if}
+					</div>
+				{/if}
+				<div class="pl-5">
+					{#each group.findings as item}
+						{@render findingsItem(item)}
+					{/each}
+				</div>
+			{:else}
+				<!-- Collapsible section -->
+				{@const isCollapsed = collapsed.has(group.header)}
+				<button
+					class="flex w-full items-center py-1"
+					onclick={() => toggleCollapse(group.header)}
+				>
+					<span
+						class="text-[18px] leading-none"
+						style:color="var(--color-text-heading)"
+					>
+						{isCollapsed ? '›' : '⌄'}
+					</span>
+					<span class="ml-0.5 font-epic text-[14px] font-bold" style:color="var(--color-text-heading)">
+						{group.header}
+					</span>
+					<span class="ml-2 flex-1 border-t" style:border-color="var(--color-divider)"></span>
+				</button>
+				{#if !isCollapsed}
+					{@render findingsContent(group.findings)}
+				{/if}
+			{/if}
+		</div>
+	{/each}
+
+	{#if showRepeatProcedure}
+		<RepeatProcedureWidget />
+	{/if}
+
+	{#if limitationOptions.length > 0}
+		<div class="border-t py-1" style:border-color="var(--color-divider)"></div>
+		<div class="pl-5">
+			<LimitationsWidget options={limitationOptions} />
+		</div>
+	{/if}
+</div>

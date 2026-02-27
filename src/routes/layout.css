@@ -1,3 +1,39 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+@theme {
+	/* Epic EHR color tokens */
+	--color-bg-primary: #EBF1F7;
+	--color-bg-surface: #FFFFFF;
+	--color-bg-toolbar: #F5F5F5;
+	--color-text-primary: #333333;
+	--color-text-heading: #2E5B88;
+	--color-text-link: #2E5B88;
+	--color-accent-green: #4C8C2B;
+
+	--color-btn-default-bg: #DCE6EF;
+	--color-btn-default-border: #C0CDD8;
+	--color-btn-selected-bg: #5B9BD5;
+	--color-btn-selected-border: #4A86BE;
+	--color-btn-selected-text: #FFFFFF;
+	--color-btn-hover-bg: #E0EAF2;
+
+	--color-divider: #C0CDD8;
+	--color-input-border: #B0BEC5;
+	--color-input-bg: #FFFFFF;
+
+	--color-finding-present-bg: #FFEBEE;
+	--color-finding-present-border: #EF5350;
+	--color-finding-present-icon: #C62828;
+	--color-finding-absent-bg: #E8F5E9;
+	--color-finding-absent-border: #66BB6A;
+	--color-finding-absent-icon: #388E3C;
+	--color-finding-na-bg: #ECEFF1;
+	--color-finding-na-border: #90A4AE;
+	--color-finding-null-bg: #F5F5F5;
+	--color-finding-null-border: #BDBDBD;
+
+	/* Epic font stack */
+	--font-epic: 'Segoe UI', Tahoma, sans-serif;
+}
