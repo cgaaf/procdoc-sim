@@ -1,5 +1,6 @@
 <script module lang="ts">
 	import { defineMeta } from '@storybook/addon-svelte-csf';
+	import { expect, userEvent, within } from 'storybook/test';
 	import FindingsButtonGroup from './FindingsButtonGroup.svelte';
 	import AppStateDecorator from '$lib/components/storybook/AppStateDecorator.svelte';
 	import type { FindingsButtonGroupDef } from '$lib/types/procdoc-definition';
@@ -28,6 +29,26 @@
 		exclusiveOptions: new Set()
 	};
 
+	async function assertNoWidthShiftOnToggle({ canvasElement }: { canvasElement: HTMLElement }) {
+		const canvas = within(canvasElement);
+		const buttons = canvas.getAllByRole('button');
+
+		// Record each button's width before any interaction
+		const widthsBefore = buttons.map((btn) => btn.offsetWidth);
+
+		// Click each button to toggle bold ON — width should stay the same
+		for (let i = 0; i < buttons.length; i++) {
+			await userEvent.click(buttons[i]);
+			await expect(buttons[i].offsetWidth).toBe(widthsBefore[i]);
+		}
+
+		// Click each button again to toggle bold OFF — width should still match
+		for (let i = 0; i < buttons.length; i++) {
+			await userEvent.click(buttons[i]);
+			await expect(buttons[i].offsetWidth).toBe(widthsBefore[i]);
+		}
+	}
+
 	const { Story } = defineMeta({
 		title: 'Form/FindingsButtonGroup',
 		component: FindingsButtonGroup,
@@ -38,7 +59,7 @@
 	});
 </script>
 
-<Story name="Multi-Select (Indication)" args={{ group: multiSelectGroup }} />
+<Story name="Multi-Select (Indication)" args={{ group: multiSelectGroup }} play={assertNoWidthShiftOnToggle} />
 
 <Story name="Multi-Select with Exclusive" args={{ group: multiSelectExclusiveGroup }} />
 

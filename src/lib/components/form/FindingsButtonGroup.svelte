@@ -50,8 +50,9 @@
 	{#each group.options as option}
 		{@const isSelected = selectedSet.has(option)}
 		<button
-			class="rounded-[3px] border px-2.5 py-1.5 font-epic text-[11px] transition-colors"
+			class="bold-stable rounded-[3px] border px-2.5 py-1.5 font-epic text-[11px] transition-colors"
 			class:font-semibold={isSelected}
+			data-text={option}
 			style:background-color={isSelected ? 'var(--color-btn-selected-bg)' : 'var(--color-btn-default-bg)'}
 			style:border-color={isSelected ? 'var(--color-btn-selected-border)' : 'var(--color-btn-default-border)'}
 			style:color={isSelected ? 'var(--color-btn-selected-text)' : 'var(--color-text-primary)'}
@@ -61,3 +62,25 @@
 		</button>
 	{/each}
 </div>
+
+<style>
+	/* Hidden bold reserve: an invisible pseudo-element always renders the
+	   button text in bold, reserving the maximum width so toggling
+	   font-weight on the visible text never causes a size shift. */
+	.bold-stable {
+		display: inline-flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		overflow: hidden;
+	}
+	.bold-stable::after {
+		content: attr(data-text);
+		font-weight: 600;
+		height: 0;
+		overflow: hidden;
+		visibility: hidden;
+		display: block;
+		pointer-events: none;
+	}
+</style>
