@@ -64,7 +64,7 @@
 	<div class="w-1"></div>
 	<!-- Toggle control -->
 	<div
-		class="flex max-w-[200px] rounded-[3px] border"
+		class="flex w-[200px] rounded-[3px] border"
 		style:border-color={borderColor}
 	>
 		<!-- Plus button (present = pathology = RED) -->
