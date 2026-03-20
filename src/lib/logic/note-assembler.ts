@@ -16,6 +16,7 @@ export interface NoteAssemblerState {
 	additionalFindings: string;
 	macroGet(macroId: string): string | null;
 	macroGetMulti(macroId: string): Set<string>;
+	getComment(macroId: string): string;
 }
 
 // ─── FAST Note Builder ──────────────────────────────────────────────
@@ -387,6 +388,7 @@ function hasCardiacFindings(state: NoteAssemblerState): boolean {
 	for (const id of ['macro_3', 'macro_3b']) {
 		const v = state.macroGet(id);
 		if (v != null && v !== 'no obtained') return true;
+		if (state.getComment(id) !== '') return true;
 	}
 	return false;
 }
@@ -395,6 +397,7 @@ function hasAbdominalFindings(state: NoteAssemblerState): boolean {
 	for (const id of ['macro_4', 'macro_5', 'macro_6']) {
 		const v = state.macroGet(id);
 		if (v != null && v !== 'not obtained') return true;
+		if (state.getComment(id) !== '') return true;
 	}
 	return false;
 }
@@ -402,7 +405,10 @@ function hasAbdominalFindings(state: NoteAssemblerState): boolean {
 function hasLungFindings(state: NoteAssemblerState): boolean {
 	const left = state.macroGetMulti('macro_7_left');
 	const right = state.macroGetMulti('macro_7_right');
-	return left.size > 0 || right.size > 0;
+	if (left.size > 0 || right.size > 0) return true;
+	if (state.getComment('macro_7_left') !== '') return true;
+	if (state.getComment('macro_7_right') !== '') return true;
+	return false;
 }
 
 function getIndication(state: NoteAssemblerState): string | null {
@@ -445,23 +451,38 @@ function getDateTime(state: NoteAssemblerState): string {
 }
 
 function addCardiacFindingLines(state: NoteAssemblerState, spans: NoteSpan[]) {
-	const m3 = state.macroGet('macro_3');
-	const m3b = state.macroGet('macro_3b');
+	addCardiacFindingLine(state, spans, 'macro_3', 'Subxiphoid');
+	addCardiacFindingLine(state, spans, 'macro_3b', 'Parasternal long');
+}
 
-	if (m3 != null && m3 !== 'no obtained') {
-		const desc =
-			m3 === 'Effusion'
-				? 'positive for pericardial effusion'
-				: 'negative for pericardial effusion';
-		spans.push({ text: `Subxiphoid view ${desc}\n` });
+function addCardiacFindingLine(
+	state: NoteAssemblerState,
+	spans: NoteSpan[],
+	macroId: string,
+	viewLabel: string
+) {
+	const value = state.macroGet(macroId);
+	const comment = state.getComment(macroId);
+	const isObtainedValue = value != null && value !== 'no obtained';
+
+	if (!isObtainedValue && !comment) return;
+
+	const suffix = comment ? ` (${comment})` : '';
+
+	if (!isObtainedValue) {
+		spans.push({ text: `${viewLabel} view${suffix}\n` });
+		return;
 	}
-	if (m3b != null && m3b !== 'no obtained') {
-		const desc =
-			m3b === 'Effusion'
-				? 'positive for pericardial effusion'
-				: 'negative for pericardial effusion';
-		spans.push({ text: `Parasternal long view ${desc}\n` });
+
+	let desc: string;
+	if (value === 'Effusion') {
+		desc = 'positive for pericardial effusion';
+	} else if (value === 'Indeterminate') {
+		desc = 'indeterminate for pericardial effusion';
+	} else {
+		desc = 'negative for pericardial effusion';
 	}
+	spans.push({ text: `${viewLabel} view ${desc}${suffix}\n` });
 }
 
 function addAbdominalFindingLine(
@@ -472,22 +493,54 @@ function addAbdominalFindingLine(
 	findingLabel: string
 ) {
 	const value = state.macroGet(macroId);
-	if (value == null || value === 'not obtained') return;
-	const desc =
-		value === 'Free fluid' ? `positive for ${findingLabel}` : `negative for ${findingLabel}`;
-	spans.push({ text: `${viewLabel} view ${desc}\n` });
+	const comment = state.getComment(macroId);
+	const isObtainedValue = value != null && value !== 'not obtained';
+
+	if (!isObtainedValue && !comment) return;
+
+	const suffix = comment ? ` (${comment})` : '';
+
+	if (!isObtainedValue) {
+		spans.push({ text: `${viewLabel} view${suffix}\n` });
+		return;
+	}
+
+	let desc: string;
+	if (value === 'Free fluid') {
+		desc = `positive for ${findingLabel}`;
+	} else if (value === 'Indeterminate') {
+		desc = `indeterminate for ${findingLabel}`;
+	} else {
+		desc = `negative for ${findingLabel}`;
+	}
+	spans.push({ text: `${viewLabel} view ${desc}${suffix}\n` });
 }
 
 function addThoracicFindingLines(state: NoteAssemblerState, spans: NoteSpan[]) {
-	const left = state.macroGetMulti('macro_7_left');
-	const right = state.macroGetMulti('macro_7_right');
+	addThoracicSideLine(state, spans, 'macro_7_left', 'Left hemithorax');
+	addThoracicSideLine(state, spans, 'macro_7_right', 'Right hemithorax');
+}
 
-	if (left.size > 0) {
-		spans.push({ text: `Left hemithorax: ${formatLungFindings(left)}\n` });
+function addThoracicSideLine(
+	state: NoteAssemblerState,
+	spans: NoteSpan[],
+	macroId: string,
+	sideLabel: string
+) {
+	const findings = state.macroGetMulti(macroId);
+	const comment = state.getComment(macroId);
+	const hasFindings = findings.size > 0;
+
+	if (!hasFindings && !comment) return;
+
+	const suffix = comment ? ` (${comment})` : '';
+
+	if (!hasFindings) {
+		spans.push({ text: `${sideLabel}:${suffix}\n` });
+		return;
 	}
-	if (right.size > 0) {
-		spans.push({ text: `Right hemithorax: ${formatLungFindings(right)}\n` });
-	}
+
+	spans.push({ text: `${sideLabel}: ${formatLungFindings(findings)}${suffix}\n` });
 }
 
 function formatLungFindings(findings: Set<string>): string {
@@ -510,9 +563,25 @@ function buildInterpretation(state: NoteAssemblerState, interp: string): string 
 			);
 		case 'Positive FAST':
 			return buildPositiveInterpretation(state);
+		case 'Indeterminate FAST':
+			return buildIndeterminateInterpretation(state);
 		default:
 			return interp;
 	}
+}
+
+function buildIndeterminateInterpretation(state: NoteAssemblerState): string {
+	const sites: string[] = [];
+
+	if (state.macroGet('macro_3') === 'Indeterminate' || state.macroGet('macro_3b') === 'Indeterminate') {
+		sites.push('cardiac');
+	}
+	if (state.macroGet('macro_4') === 'Indeterminate') sites.push('RUQ');
+	if (state.macroGet('macro_5') === 'Indeterminate') sites.push('LUQ');
+	if (state.macroGet('macro_6') === 'Indeterminate') sites.push('Bladder');
+
+	if (sites.length === 0) return 'Indeterminate FAST';
+	return `Indeterminate FAST \u2013 technically limited study (${sites.join(', ')})`;
 }
 
 function buildPositiveInterpretation(state: NoteAssemblerState): string {
@@ -561,6 +630,7 @@ function hasDvtFindings(state: NoteAssemblerState): boolean {
 	for (const id of DVT_ALL_VESSEL_IDS) {
 		const v = state.macroGet(id);
 		if (v != null && v !== 'Not obtained') return true;
+		if (state.getComment(id) !== '') return true;
 	}
 	return false;
 }
@@ -569,6 +639,7 @@ function hasDvtSideFindings(state: NoteAssemblerState, vesselIds: string[]): boo
 	for (const id of vesselIds) {
 		const v = state.macroGet(id);
 		if (v != null && v !== 'Not obtained') return true;
+		if (state.getComment(id) !== '') return true;
 	}
 	return false;
 }
@@ -601,8 +672,19 @@ function addDvtVesselLine(
 	vesselLabel: string
 ) {
 	const value = state.macroGet(macroId);
-	if (value == null || value === 'Not obtained') return;
-	spans.push({ text: `    ${vesselLabel}: ${value.toLowerCase()}\n` });
+	const comment = state.getComment(macroId);
+	const isObtainedValue = value != null && value !== 'Not obtained';
+
+	if (!isObtainedValue && !comment) return;
+
+	const suffix = comment ? ` (${comment})` : '';
+
+	if (!isObtainedValue) {
+		spans.push({ text: `    ${vesselLabel}:${suffix}\n` });
+		return;
+	}
+
+	spans.push({ text: `    ${vesselLabel}: ${value.toLowerCase()}${suffix}\n` });
 }
 
 function buildDvtInterpretation(state: NoteAssemblerState, interp: string): string {

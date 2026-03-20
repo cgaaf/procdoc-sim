@@ -8,6 +8,7 @@
 export class MacroSelections {
 	selections = $state<Map<string, string | null>>(new Map());
 	multiSelections = $state<Map<string, Set<string>>>(new Map());
+	comments = $state<Map<string, string>>(new Map());
 
 	get(macroId: string): string | null {
 		return this.selections.get(macroId) ?? null;
@@ -42,8 +43,24 @@ export class MacroSelections {
 		}
 	}
 
+	getComment(macroId: string): string {
+		return this.comments.get(macroId) ?? '';
+	}
+
+	setComment(macroId: string, text: string): void {
+		const trimmed = text.trim();
+		const next = new Map(this.comments);
+		if (trimmed === '') {
+			next.delete(macroId);
+		} else {
+			next.set(macroId, trimmed);
+		}
+		this.comments = next;
+	}
+
 	clear(): void {
 		this.selections = new Map();
 		this.multiSelections = new Map();
+		this.comments = new Map();
 	}
 }

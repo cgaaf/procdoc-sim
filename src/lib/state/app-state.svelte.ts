@@ -39,6 +39,7 @@ export class AppState {
 		return getDvtDerivedSide({
 			macroGet: (id: string) => this.macroSelections.get(id),
 			macroGetMulti: (id: string) => this.macroSelections.getMulti(id),
+			getComment: (id: string) => this.macroSelections.getComment(id),
 			performingProvider: this.performingProvider,
 			authorizingProvider: this.authorizingProvider,
 			procedureDate: this.procedureDate,
@@ -63,7 +64,8 @@ export class AppState {
 			limitationsText: this.limitationsText,
 			additionalFindings: this.additionalFindings,
 			macroGet: (id: string) => this.macroSelections.get(id),
-			macroGetMulti: (id: string) => this.macroSelections.getMulti(id)
+			macroGetMulti: (id: string) => this.macroSelections.getMulti(id),
+			getComment: (id: string) => this.macroSelections.getComment(id)
 		};
 		switch (this.selectedUltrasoundType) {
 			case 'fast':
@@ -103,6 +105,14 @@ export class AppState {
 			this.templateParts = [];
 			this.procdocDefinition = null;
 		}
+	}
+
+	setComment(macroId: string, text: string) {
+		this.macroSelections.setComment(macroId, text);
+	}
+
+	getComment(macroId: string): string {
+		return this.macroSelections.getComment(macroId);
 	}
 
 	setMacroSelection(macroId: string, value: string | null) {
@@ -294,6 +304,13 @@ export class AppState {
 		return false;
 	}
 
+	private _hasAnyIndeterminateFinding(): boolean {
+		for (const id of ['macro_3', 'macro_3b', 'macro_4', 'macro_5', 'macro_6']) {
+			if (this.macroSelections.get(id) === 'Indeterminate') return true;
+		}
+		return false;
+	}
+
 	private _isCardiacNegative(): boolean {
 		const m3 = this.macroSelections.get('macro_3');
 		const m3b = this.macroSelections.get('macro_3b');
@@ -322,6 +339,8 @@ export class AppState {
 	private _updateFastInterpretation() {
 		if (this._hasAnyPositiveFinding()) {
 			this.macroSelections.set('macro_8', 'Positive FAST');
+		} else if (this._hasAnyIndeterminateFinding()) {
+			this.macroSelections.set('macro_8', 'Indeterminate FAST');
 		} else if (
 			this._isCardiacNegative() &&
 			this._isAbdominalAllNegative() &&

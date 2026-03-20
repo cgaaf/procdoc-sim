@@ -40,7 +40,7 @@ export const fastProcdocDefinition: ProcdocDefinition = {
 					label: 'Subxiphoid',
 					findingLabel: 'Pericardial effusion',
 					macroId: 'macro_3',
-					presentOptions: ['Effusion'],
+					presentOptions: ['Effusion', 'Indeterminate'],
 					absentOption: 'Normal no effusion',
 					naOption: 'no obtained'
 				},
@@ -49,7 +49,7 @@ export const fastProcdocDefinition: ProcdocDefinition = {
 					label: 'Parasternal Long',
 					findingLabel: 'Pericardial effusion',
 					macroId: 'macro_3b',
-					presentOptions: ['Effusion'],
+					presentOptions: ['Effusion', 'Indeterminate'],
 					absentOption: 'Normal no effusion',
 					naOption: 'no obtained'
 				}
@@ -65,7 +65,8 @@ export const fastProcdocDefinition: ProcdocDefinition = {
 					macroId: 'macro_7_left',
 					options: ['Normal Lung Slide', 'Pneumothorax', 'Hemothorax'],
 					multiSelect: true,
-					exclusiveOptions: new Set(['Normal Lung Slide'])
+					exclusiveOptions: new Set(['Normal Lung Slide']),
+					commentable: true
 				},
 				{ kind: 'subHeader', title: 'Right Hemithorax' },
 				{
@@ -73,7 +74,8 @@ export const fastProcdocDefinition: ProcdocDefinition = {
 					macroId: 'macro_7_right',
 					options: ['Normal Lung Slide', 'Pneumothorax', 'Hemothorax'],
 					multiSelect: true,
-					exclusiveOptions: new Set(['Normal Lung Slide'])
+					exclusiveOptions: new Set(['Normal Lung Slide']),
+					commentable: true
 				}
 			]
 		},
@@ -86,7 +88,7 @@ export const fastProcdocDefinition: ProcdocDefinition = {
 					label: "RUQ (Morrison's Pouch)",
 					findingLabel: 'Free fluid',
 					macroId: 'macro_4',
-					presentOptions: ['Free fluid'],
+					presentOptions: ['Free fluid', 'Indeterminate'],
 					absentOption: 'Normal no free fluid',
 					naOption: 'not obtained'
 				},
@@ -95,7 +97,7 @@ export const fastProcdocDefinition: ProcdocDefinition = {
 					label: 'LUQ (Splenorenal)',
 					findingLabel: 'Free fluid',
 					macroId: 'macro_5',
-					presentOptions: ['Free fluid'],
+					presentOptions: ['Free fluid', 'Indeterminate'],
 					absentOption: 'Normal no free fluid',
 					naOption: 'not obtained'
 				},
@@ -104,7 +106,7 @@ export const fastProcdocDefinition: ProcdocDefinition = {
 					label: 'Bladder (Suprapubic)',
 					findingLabel: 'Free fluid',
 					macroId: 'macro_6',
-					presentOptions: ['Free fluid'],
+					presentOptions: ['Free fluid', 'Indeterminate'],
 					absentOption: 'Normal no free fluid',
 					naOption: 'not obtained'
 				}

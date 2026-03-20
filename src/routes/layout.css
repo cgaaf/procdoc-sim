@@ -33,6 +33,9 @@
 	--color-finding-na-border: #90A4AE;
 	--color-finding-null-bg: #F5F5F5;
 	--color-finding-null-border: #BDBDBD;
+	--color-finding-indeterminate-bg: #FFF8E1;
+	--color-finding-indeterminate-border: #FFB300;
+	--color-finding-indeterminate-icon: #F57F17;
 
 	/* Epic font stack */
 	--font-epic: 'Segoe UI', Tahoma, sans-serif;

@@ -53,6 +53,7 @@ export interface FindingsButtonGroupDef {
 	options: string[];
 	multiSelect: boolean;
 	exclusiveOptions: Set<string>;
+	commentable?: boolean;
 }
 
 export interface RadioFindingSubsection {
