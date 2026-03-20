@@ -35,6 +35,7 @@ storybook-static
 .idea
 *.swp
 *.swo
+.claude
 
 # Misc
 *.log
