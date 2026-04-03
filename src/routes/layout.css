@@ -1,42 +1,42 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
 @theme {
-	/* Epic EHR color tokens */
-	--color-bg-primary: #EBF1F7;
-	--color-bg-surface: #FFFFFF;
-	--color-bg-toolbar: #F5F5F5;
-	--color-text-primary: #333333;
-	--color-text-heading: #2E5B88;
-	--color-text-link: #2E5B88;
-	--color-accent-green: #4C8C2B;
+  /* Epic EHR color tokens */
+  --color-bg-primary: #ebf1f7;
+  --color-bg-surface: #ffffff;
+  --color-bg-toolbar: #f5f5f5;
+  --color-text-primary: #333333;
+  --color-text-heading: #2e5b88;
+  --color-text-link: #2e5b88;
+  --color-accent-green: #4c8c2b;
 
-	--color-btn-default-bg: #DCE6EF;
-	--color-btn-default-border: #C0CDD8;
-	--color-btn-selected-bg: #5B9BD5;
-	--color-btn-selected-border: #4A86BE;
-	--color-btn-selected-text: #FFFFFF;
-	--color-btn-hover-bg: #E0EAF2;
+  --color-btn-default-bg: #dce6ef;
+  --color-btn-default-border: #c0cdd8;
+  --color-btn-selected-bg: #5b9bd5;
+  --color-btn-selected-border: #4a86be;
+  --color-btn-selected-text: #ffffff;
+  --color-btn-hover-bg: #e0eaf2;
 
-	--color-divider: #C0CDD8;
-	--color-input-border: #B0BEC5;
-	--color-input-bg: #FFFFFF;
+  --color-divider: #c0cdd8;
+  --color-input-border: #b0bec5;
+  --color-input-bg: #ffffff;
 
-	--color-finding-present-bg: #FFEBEE;
-	--color-finding-present-border: #EF5350;
-	--color-finding-present-icon: #C62828;
-	--color-finding-absent-bg: #E8F5E9;
-	--color-finding-absent-border: #66BB6A;
-	--color-finding-absent-icon: #388E3C;
-	--color-finding-na-bg: #ECEFF1;
-	--color-finding-na-border: #90A4AE;
-	--color-finding-null-bg: #F5F5F5;
-	--color-finding-null-border: #BDBDBD;
-	--color-finding-indeterminate-bg: #FFF8E1;
-	--color-finding-indeterminate-border: #FFB300;
-	--color-finding-indeterminate-icon: #F57F17;
+  --color-finding-present-bg: #ffebee;
+  --color-finding-present-border: #ef5350;
+  --color-finding-present-icon: #c62828;
+  --color-finding-absent-bg: #e8f5e9;
+  --color-finding-absent-border: #66bb6a;
+  --color-finding-absent-icon: #388e3c;
+  --color-finding-na-bg: #eceff1;
+  --color-finding-na-border: #90a4ae;
+  --color-finding-null-bg: #f5f5f5;
+  --color-finding-null-border: #bdbdbd;
+  --color-finding-indeterminate-bg: #fff8e1;
+  --color-finding-indeterminate-border: #ffb300;
+  --color-finding-indeterminate-icon: #f57f17;
 
-	/* Epic font stack */
-	--font-epic: 'Segoe UI', Tahoma, sans-serif;
+  /* Epic font stack */
+  --font-epic: "Segoe UI", Tahoma, sans-serif;
 }
