@@ -8,8 +8,10 @@
 	import DateTimeRow from '$lib/components/form/DateTimeRow.svelte';
 	import ProcdocRenderer from '$lib/components/preview/ProcdocRenderer.svelte';
 
-	const state = new AppState();
-	setContext(APP_STATE_KEY, state);
+	const appState = new AppState();
+	setContext(APP_STATE_KEY, appState);
+
+	let previewCollapsed = $state(false);
 </script>
 
 <div class="flex h-screen" style:background-color="var(--color-bg-primary)">
@@ -17,25 +19,25 @@
 	<div class="flex-1 overflow-auto">
 		<div class="min-w-[520px]">
 			<div class="py-2">
-				{#if state.selectedUltrasoundType === 'fast' || state.selectedUltrasoundType === 'dvt'}
+				{#if appState.selectedUltrasoundType === 'fast' || appState.selectedUltrasoundType === 'dvt'}
 					<NormalPresetsBar />
 					<div class="h-2"></div>
 				{/if}
 
 				<UltrasoundTypeGrid />
 
-				{#if state.procdocDefinition && state.procdocDefinition.findingsGroups.length > 0}
+				{#if appState.procdocDefinition && appState.procdocDefinition.findingsGroups.length > 0}
 					<div class="h-3"></div>
 					<FindingsPanel
-						findingsGroups={state.procdocDefinition.findingsGroups}
-						limitationOptions={state.procdocDefinition.limitationOptions}
-						helperText={state.procdocDefinition.findingsHelperText}
-						showRepeatProcedure={state.selectedUltrasoundType !== 'dvt'}
+						findingsGroups={appState.procdocDefinition.findingsGroups}
+						limitationOptions={appState.procdocDefinition.limitationOptions}
+						helperText={appState.procdocDefinition.findingsHelperText}
+						showRepeatProcedure={appState.selectedUltrasoundType !== 'dvt'}
 					/>
 				{/if}
 
-				{#if state.selectedUltrasoundType != null}
-					{@const typeInfo = ['fast', 'dvt'].includes(state.selectedUltrasoundType)}
+				{#if appState.selectedUltrasoundType != null}
+					{@const typeInfo = ['fast', 'dvt'].includes(appState.selectedUltrasoundType)}
 					{#if !typeInfo}
 						<div class="p-3">
 							<div
@@ -44,7 +46,7 @@
 								style:border-color="var(--color-divider)"
 							>
 								<span class="font-epic text-[13px] italic text-gray-400">
-									Template coming soon for {state.selectedUltrasoundType === 'cardiac' ? 'Cardiac' : state.selectedUltrasoundType}
+									Template coming soon for {appState.selectedUltrasoundType === 'cardiac' ? 'Cardiac' : appState.selectedUltrasoundType}
 								</span>
 							</div>
 						</div>
@@ -57,13 +59,32 @@
 		</div>
 	</div>
 
-	<!-- Right panel: generated note preview -->
-	<div class="flex-1 overflow-auto">
-		<div class="py-2">
-			{#if state.procdocDefinition}
-				<ProcdocRenderer />
-			{/if}
-			<div class="h-6"></div>
+	<!-- Right panel: generated note preview (collapsible horizontally) -->
+	{#if previewCollapsed}
+		<button
+			class="flex h-full w-[36px] shrink-0 cursor-pointer items-start border-l pt-2"
+			style:background-color="var(--color-bg-toolbar)"
+			style:border-color="var(--color-divider)"
+			onclick={() => previewCollapsed = false}
+			title="Show preview"
+		>
+			<span class="flex w-full flex-col items-center gap-1">
+				<span class="text-[16px] leading-none" style:color="var(--color-text-heading)">›</span>
+				<span
+					class="font-epic text-[11px] font-bold"
+					style:color="var(--color-text-heading)"
+					style:writing-mode="vertical-rl"
+				>Preview</span>
+			</span>
+		</button>
+	{:else}
+		<div class="flex-1 overflow-auto">
+			<div class="py-2">
+				{#if appState.procdocDefinition}
+					<ProcdocRenderer oncollapse={() => previewCollapsed = true} />
+				{/if}
+				<div class="h-6"></div>
+			</div>
 		</div>
-	</div>
+	{/if}
 </div>

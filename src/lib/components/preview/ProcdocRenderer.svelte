@@ -1,23 +1,40 @@
 <script lang="ts">
 	import { getAppState } from '$lib/state/context';
-	import SectionHeader from '$lib/components/ui/SectionHeader.svelte';
 
-	const state = getAppState();
+	let { oncollapse }: { oncollapse: () => void } = $props();
+
+	const appState = getAppState();
 </script>
 
 <div class="px-3">
-	<SectionHeader title="Generated Note Preview" />
+	<button
+		class="mb-1 flex w-full items-center"
+		onclick={oncollapse}
+	>
+		<span
+			class="text-[18px] leading-none"
+			style:color="var(--color-text-heading)"
+		>
+			‹
+		</span>
+		<h2
+			class="ml-0.5 font-epic text-[14px] font-bold"
+			style:color="var(--color-text-heading)"
+		>
+			Generated Note Preview
+		</h2>
+	</button>
 	<div
 		class="w-full select-text rounded-[2px] border p-2.5"
 		style:background-color="var(--color-bg-surface)"
 		style:border-color="var(--color-divider)"
 	>
-		{#if state.assembledNote.length === 0}
+		{#if appState.assembledNote.length === 0}
 			<span class="font-epic text-[13px] italic text-gray-400">
 				Select an ultrasound type to see the procedure template.
 			</span>
 		{:else}
-			{#each state.assembledNote as span}
+			{#each appState.assembledNote as span}
 				<span
 					class="font-epic text-[13px]"
 					class:font-bold={span.bold}
