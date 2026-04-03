@@ -1,69 +1,77 @@
 export interface ProcdocDefinition {
-	sections: ProcdocSection[];
-	findingsGroups: FindingsGroupSection[];
-	limitationOptions: string[];
-	findingsHelperText?: string;
+  sections: ProcdocSection[];
+  findingsGroups: FindingsGroupSection[];
+  limitationOptions: string[];
+  findingsHelperText?: string;
 }
 
 // --- Procdoc section discriminated union ---
 
 export type ProcdocSection =
-	| { kind: 'staticText'; text: string; bold: boolean }
-	| { kind: 'dropdownField'; label: string; macroId: string; options: string[]; blankSingle: boolean }
-	| { kind: 'limitations'; options: string[] }
-	| { kind: 'freeText'; label: string }
-	| { kind: 'signature' }
-	| { kind: 'mixedText'; parts: import('./template').TemplatePart[] };
+  | { kind: "staticText"; text: string; bold: boolean }
+  | {
+      kind: "dropdownField";
+      label: string;
+      macroId: string;
+      options: string[];
+      blankSingle: boolean;
+    }
+  | { kind: "limitations"; options: string[] }
+  | { kind: "freeText"; label: string }
+  | { kind: "signature" }
+  | { kind: "mixedText"; parts: import("./template").TemplatePart[] };
 
 // --- Findings group ---
 
 export interface FindingsGroupSection {
-	header: string;
-	label?: string;
-	required: boolean;
-	findings: FindingsItem[];
+  header: string;
+  label?: string;
+  required: boolean;
+  findings: FindingsItem[];
 }
 
 // --- Findings item discriminated union ---
 
 export type FindingsItem =
-	| FindingsSubHeader
-	| FindingRow
-	| FindingsButtonGroupDef
-	| RadioFindingSubsection;
+  | FindingsSubHeader
+  | FindingRow
+  | FindingsButtonGroupDef
+  | RadioFindingSubsection;
 
 export interface FindingsSubHeader {
-	kind: 'subHeader';
-	title: string;
+  kind: "subHeader";
+  title: string;
 }
 
 export interface FindingRow {
-	kind: 'findingRow';
-	label: string;
-	findingLabel: string;
-	macroId: string;
-	presentOptions: string[];
-	absentOption: string;
-	naOption?: string;
+  kind: "findingRow";
+  label: string;
+  findingLabel: string;
+  macroId: string;
+  presentOptions: string[];
+  absentOption: string;
+  naOption?: string;
+  /** Render as 3 equal Positive / Negative / Indeterminate buttons instead of the +/−  toggle */
+  triState?: boolean;
 }
 
 export interface FindingsButtonGroupDef {
-	kind: 'buttonGroup';
-	macroId: string;
-	options: string[];
-	multiSelect: boolean;
-	exclusiveOptions: Set<string>;
-	commentable?: boolean;
+  kind: "buttonGroup";
+  macroId: string;
+  options: string[];
+  multiSelect: boolean;
+  exclusiveOptions: Set<string>;
+  commentable?: boolean;
 }
 
 export interface RadioFindingSubsection {
-	kind: 'radioSubsection';
-	header: string;
-	rows: RadioFindingRow[];
+  kind: "radioSubsection";
+  header: string;
+  rows: RadioFindingRow[];
 }
 
 export interface RadioFindingRow {
-	label: string;
-	macroId: string;
-	options: string[];
+  label: string;
+  macroId: string;
+  options: string[];
 }
