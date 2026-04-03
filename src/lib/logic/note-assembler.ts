@@ -189,6 +189,356 @@ export function buildFastNote(state: NoteAssemblerState): NoteSpan[] {
 	return spans;
 }
 
+// ─── Echo/Lung Note Builder ────────────────────────────────────────
+
+export function buildEchoLungNote(state: NoteAssemblerState): NoteSpan[] {
+	const spans: NoteSpan[] = [];
+	const dateTime = getDateTime(state);
+
+	const indication = getMultiOrSingle(state, 'echo_indication');
+	const hasCardiac = hasAnySelection(state, ['echo_lv', 'echo_rv', 'echo_pericardium', 'echo_ivc']);
+	const hasLung =
+		state.macroGetMulti('echo_lung_left').size > 0 ||
+		state.macroGetMulti('echo_lung_right').size > 0;
+	const hasFindings = hasCardiac || hasLung;
+
+	spans.push({ text: 'Ultrasound - Point of Care', bold: true });
+	spans.push({ text: '\n\n' });
+	addProviderBlock(state, spans);
+
+	if (hasFindings) {
+		if (hasCardiac) {
+			spans.push({ text: 'CPT 93308', bold: true });
+			spans.push({ text: '  Transthoracic echocardiography, limited\n' });
+		}
+		if (hasLung) {
+			spans.push({ text: 'CPT 76604', bold: true });
+			spans.push({ text: '  Ultrasound, chest\n' });
+		}
+		spans.push({ text: '\n' });
+	}
+
+	if (indication) {
+		spans.push({ text: 'Indication: ', bold: true });
+		spans.push({ text: `${indication}\n` });
+	}
+
+	if (hasFindings) {
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Findings\n', bold: true, underline: true });
+	}
+
+	if (hasCardiac) {
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Cardiac:\n', bold: true });
+		addSimpleFindingLine(state, spans, 'echo_lv', 'LV Function');
+		addSimpleFindingLine(state, spans, 'echo_rv', 'RV Dilation');
+		addSimpleFindingLine(state, spans, 'echo_pericardium', 'Pericardial Effusion');
+		addSimpleFindingLine(state, spans, 'echo_ivc', 'IVC');
+	}
+
+	if (hasLung) {
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Lung:\n', bold: true });
+		addMultiFindingLine(state, spans, 'echo_lung_left', 'Left lung');
+		addMultiFindingLine(state, spans, 'echo_lung_right', 'Right lung');
+	}
+
+	if (hasFindings) {
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Limitations: ', bold: true });
+		spans.push({ text: `${state.limitationsText}\n` });
+	}
+
+	if (state.additionalFindings) {
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Additional findings: ', bold: true });
+		spans.push({ text: `${state.additionalFindings}\n` });
+	}
+
+	if (hasFindings) {
+		addConsentBlock(spans);
+		addAttestationBlock(state, spans, dateTime);
+	}
+
+	return spans;
+}
+
+// ─── Soft Tissue Note Builder ──────────────────────────────────────
+
+export function buildSoftTissueNote(state: NoteAssemblerState): NoteSpan[] {
+	const spans: NoteSpan[] = [];
+	const dateTime = getDateTime(state);
+
+	const indication = getMultiOrSingle(state, 'st_indication');
+	const hasFindings = hasAnySelection(state, [
+		'st_collection',
+		'st_foreign_body',
+		'st_cobblestone'
+	]);
+
+	spans.push({ text: 'Ultrasound - Point of Care', bold: true });
+	spans.push({ text: '\n\n' });
+	addProviderBlock(state, spans);
+
+	if (hasFindings) {
+		spans.push({ text: 'CPT 76882', bold: true });
+		spans.push({ text: '  Ultrasound, extremity, non-vascular, limited\n\n' });
+	}
+
+	if (indication) {
+		spans.push({ text: 'Indication: ', bold: true });
+		spans.push({ text: `${indication}\n` });
+	}
+
+	if (hasFindings) {
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Findings\n', bold: true, underline: true });
+		spans.push({ text: '\n' });
+		addSimpleFindingLine(state, spans, 'st_collection', 'Fluid Collection');
+		addSimpleFindingLine(state, spans, 'st_foreign_body', 'Foreign Body');
+		addSimpleFindingLine(state, spans, 'st_cobblestone', 'Cobblestoning');
+	}
+
+	if (hasFindings) {
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Limitations: ', bold: true });
+		spans.push({ text: `${state.limitationsText}\n` });
+	}
+
+	if (state.additionalFindings) {
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Additional findings: ', bold: true });
+		spans.push({ text: `${state.additionalFindings}\n` });
+	}
+
+	if (hasFindings) {
+		addConsentBlock(spans);
+		addAttestationBlock(state, spans, dateTime);
+	}
+
+	return spans;
+}
+
+// ─── Gallbladder Note Builder ──────────────────────────────────────
+
+export function buildGallbladderNote(state: NoteAssemblerState): NoteSpan[] {
+	const spans: NoteSpan[] = [];
+	const dateTime = getDateTime(state);
+
+	const indication = getMultiOrSingle(state, 'gb_indication');
+	const hasFindings = hasAnySelection(state, [
+		'gb_stones',
+		'gb_wall',
+		'gb_fluid',
+		'gb_murphys',
+		'gb_cbd'
+	]);
+
+	spans.push({ text: 'Ultrasound - Point of Care', bold: true });
+	spans.push({ text: '\n\n' });
+	addProviderBlock(state, spans);
+
+	if (hasFindings) {
+		spans.push({ text: 'CPT 76705', bold: true });
+		spans.push({ text: '  Ultrasound, abdominal, limited\n\n' });
+	}
+
+	if (indication) {
+		spans.push({ text: 'Indication: ', bold: true });
+		spans.push({ text: `${indication}\n` });
+	}
+
+	if (hasFindings) {
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Findings\n', bold: true, underline: true });
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Gallbladder:\n', bold: true });
+		addSimpleFindingLine(state, spans, 'gb_stones', 'Gallstones');
+		addSimpleFindingLine(state, spans, 'gb_wall', 'Wall Thickness');
+		addSimpleFindingLine(state, spans, 'gb_fluid', 'Pericholecystic Fluid');
+		addSimpleFindingLine(state, spans, 'gb_murphys', "Sonographic Murphy's");
+		addSimpleFindingLine(state, spans, 'gb_cbd', 'Common Bile Duct');
+	}
+
+	if (hasFindings) {
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Limitations: ', bold: true });
+		spans.push({ text: `${state.limitationsText}\n` });
+	}
+
+	if (state.additionalFindings) {
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Additional findings: ', bold: true });
+		spans.push({ text: `${state.additionalFindings}\n` });
+	}
+
+	if (hasFindings) {
+		addConsentBlock(spans);
+		addAttestationBlock(state, spans, dateTime);
+	}
+
+	return spans;
+}
+
+// ─── Obstetric / Pelvic Note Builder ───────────────────────────────
+
+export function buildObstetricNote(state: NoteAssemblerState): NoteSpan[] {
+	const spans: NoteSpan[] = [];
+	const dateTime = getDateTime(state);
+
+	const indication = getMultiOrSingle(state, 'ob_indication');
+	const hasUterus = hasAnySelection(state, ['ob_iup', 'ob_fhr', 'ob_number']);
+	const hasPelvis = hasAnySelection(state, ['ob_free_fluid', 'ob_adnexal']);
+	const hasFindings = hasUterus || hasPelvis;
+
+	spans.push({ text: 'Ultrasound - Point of Care', bold: true });
+	spans.push({ text: '\n\n' });
+	addProviderBlock(state, spans);
+
+	if (hasFindings) {
+		spans.push({ text: 'CPT 76815', bold: true });
+		spans.push({ text: '  Ultrasound, pregnant uterus, limited\n\n' });
+	}
+
+	if (indication) {
+		spans.push({ text: 'Indication: ', bold: true });
+		spans.push({ text: `${indication}\n` });
+	}
+
+	if (hasFindings) {
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Findings\n', bold: true, underline: true });
+	}
+
+	if (hasUterus) {
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Uterus:\n', bold: true });
+		addSimpleFindingLine(state, spans, 'ob_iup', 'Intrauterine Pregnancy');
+		addSimpleFindingLine(state, spans, 'ob_fhr', 'Fetal Heart Activity');
+		addSimpleFindingLine(state, spans, 'ob_number', 'Fetal Number');
+	}
+
+	if (hasPelvis) {
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Pelvis:\n', bold: true });
+		addSimpleFindingLine(state, spans, 'ob_free_fluid', 'Free Fluid');
+		addSimpleFindingLine(state, spans, 'ob_adnexal', 'Adnexal Mass');
+	}
+
+	if (hasFindings) {
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Limitations: ', bold: true });
+		spans.push({ text: `${state.limitationsText}\n` });
+	}
+
+	if (state.additionalFindings) {
+		spans.push({ text: '\n' });
+		spans.push({ text: 'Additional findings: ', bold: true });
+		spans.push({ text: `${state.additionalFindings}\n` });
+	}
+
+	if (hasFindings) {
+		addConsentBlock(spans);
+		addAttestationBlock(state, spans, dateTime);
+	}
+
+	return spans;
+}
+
+// ─── Shared note-building helpers ──────────────────────────────────
+
+function getMultiOrSingle(state: NoteAssemblerState, macroId: string): string | null {
+	const multi = state.macroGetMulti(macroId);
+	if (multi.size > 0) return [...multi].join(', ');
+	return state.macroGet(macroId);
+}
+
+function hasAnySelection(state: NoteAssemblerState, macroIds: string[]): boolean {
+	for (const id of macroIds) {
+		if (state.macroGet(id) != null) return true;
+		if (state.getComment(id) !== '') return true;
+	}
+	return false;
+}
+
+function addProviderBlock(state: NoteAssemblerState, spans: NoteSpan[]) {
+	spans.push({ text: 'Performed by: ', bold: true });
+	spans.push({ text: `${state.performingProvider}\n`, bold: true });
+	spans.push({ text: 'Authorized by: ', bold: true });
+	spans.push({ text: `${state.authorizingProvider}\n`, bold: true });
+	spans.push({ text: '\n' });
+}
+
+function addSimpleFindingLine(
+	state: NoteAssemblerState,
+	spans: NoteSpan[],
+	macroId: string,
+	label: string
+) {
+	const value = state.macroGet(macroId);
+	const comment = state.getComment(macroId);
+	if (value == null && !comment) return;
+	const suffix = comment ? ` (${comment})` : '';
+	if (value == null) {
+		spans.push({ text: `${label}:${suffix}\n` });
+		return;
+	}
+	spans.push({ text: `${label}: ${value}${suffix}\n` });
+}
+
+function addMultiFindingLine(
+	state: NoteAssemblerState,
+	spans: NoteSpan[],
+	macroId: string,
+	label: string
+) {
+	const findings = state.macroGetMulti(macroId);
+	const comment = state.getComment(macroId);
+	if (findings.size === 0 && !comment) return;
+	const suffix = comment ? ` (${comment})` : '';
+	if (findings.size === 0) {
+		spans.push({ text: `${label}:${suffix}\n` });
+		return;
+	}
+	spans.push({ text: `${label}: ${[...findings].join(', ')}${suffix}\n` });
+}
+
+function addConsentBlock(spans: NoteSpan[]) {
+	spans.push({ text: '\n' });
+	spans.push({ text: 'Consent and Standard Precautions\n', bold: true, underline: true });
+	spans.push({
+		text:
+			'Consent was obtained verbally from the patient or appropriate guardian. ' +
+			'In emergent situations where the patient was unable to provide consent, implied consent was utilized. ' +
+			'Informed them of alternatives to comprehensive imaging, limitations of study, ' +
+			'possibility of follow up studies required, and possibilities of referral.\n\n'
+	});
+	spans.push({
+		text:
+			'Standard precautions of appropriate PPE and cleaning of the probes per the AIUM and ACEP EUS Guidelines ' +
+			'for Infection Control were maintained during the procedure and following its conclusion.\n\n'
+	});
+	spans.push({
+		text:
+			'A time out was performed prior to initiation and all available imaging was done at the bedside and ' +
+			'interpreted by the performing clinician. Patient was identified via their wrist band and ' +
+			'verbal acknowledgement.\n'
+	});
+}
+
+function addAttestationBlock(
+	state: NoteAssemblerState,
+	spans: NoteSpan[],
+	dateTime: string
+) {
+	spans.push({ text: '\n' });
+	spans.push({ text: 'Images obtained and saved.\n\n' });
+	spans.push({ text: `${state.performingProvider}\n`, bold: true });
+	spans.push({ text: 'Emergency Medicine\n', bold: true });
+	spans.push({ text: dateTime, bold: true });
+}
+
 // ─── DVT Note Builder ───────────────────────────────────────────────
 
 const DVT_LEFT_VESSEL_IDS = ['dvt_cfv_left', 'dvt_sfj_left', 'dvt_pop_left'];

@@ -3,10 +3,25 @@ import type { ProcdocDefinition } from '$lib/types/procdoc-definition';
 import type { TemplatePart } from '$lib/types/template';
 import type { NoteSpan } from '$lib/types/note';
 import { ULTRASOUND_TYPES } from '$lib/types/procedure';
-import { fastProcdocDefinition, dvtProcdocDefinition } from '$lib/data/procdoc-definitions';
+import {
+	fastProcdocDefinition,
+	dvtProcdocDefinition,
+	echolungProcdocDefinition,
+	softTissueProcdocDefinition,
+	gallbladderProcdocDefinition,
+	obstetricProcdocDefinition
+} from '$lib/data/procdoc-definitions';
 import { fastTemplate, dvtTemplate } from '$lib/data/template-data';
 import { parseTemplate } from '$lib/logic/template-parser';
-import { buildFastNote, buildDvtNote, getDvtDerivedSide } from '$lib/logic/note-assembler';
+import {
+	buildFastNote,
+	buildDvtNote,
+	buildEchoLungNote,
+	buildSoftTissueNote,
+	buildGallbladderNote,
+	buildObstetricNote,
+	getDvtDerivedSide
+} from '$lib/logic/note-assembler';
 import { MacroSelections } from './macro-selections.svelte';
 
 const DVT_LEFT_VESSEL_IDS = ['dvt_cfv_left', 'dvt_sfj_left', 'dvt_pop_left'];
@@ -72,6 +87,14 @@ export class AppState {
 				return buildFastNote(stateForAssembler);
 			case 'dvt':
 				return buildDvtNote(stateForAssembler);
+			case 'echolung':
+				return buildEchoLungNote(stateForAssembler);
+			case 'soft_tissue':
+				return buildSoftTissueNote(stateForAssembler);
+			case 'gallbladder':
+				return buildGallbladderNote(stateForAssembler);
+			case 'obstetric':
+				return buildObstetricNote(stateForAssembler);
 			default:
 				return [];
 		}
@@ -92,15 +115,22 @@ export class AppState {
 
 		const typeInfo = ULTRASOUND_TYPES.find((t) => t.value === type);
 		if (typeInfo?.hasTemplate) {
-			const raw = type === 'fast' ? fastTemplate : type === 'dvt' ? dvtTemplate : '';
+			const templateMap: Partial<Record<UltrasoundType, string>> = {
+				fast: fastTemplate,
+				dvt: dvtTemplate
+			};
+			const raw = templateMap[type] ?? '';
 			this.templateParts = parseTemplate(raw);
 
-			this.procdocDefinition =
-				type === 'fast'
-					? fastProcdocDefinition
-					: type === 'dvt'
-						? dvtProcdocDefinition
-						: null;
+			const definitionMap: Partial<Record<UltrasoundType, ProcdocDefinition>> = {
+				fast: fastProcdocDefinition,
+				dvt: dvtProcdocDefinition,
+				echolung: echolungProcdocDefinition,
+				soft_tissue: softTissueProcdocDefinition,
+				gallbladder: gallbladderProcdocDefinition,
+				obstetric: obstetricProcdocDefinition
+			};
+			this.procdocDefinition = definitionMap[type] ?? null;
 		} else {
 			this.templateParts = [];
 			this.procdocDefinition = null;

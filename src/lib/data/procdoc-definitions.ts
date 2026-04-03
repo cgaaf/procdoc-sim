@@ -1,5 +1,16 @@
 import type { ProcdocDefinition } from '$lib/types/procdoc-definition';
 
+// ─── Shared indication presets ─────────────────────────────────────
+
+const STANDARD_LIMITATIONS = [
+	'Body habitus',
+	'Patient unable to cooperate',
+	'Suboptimal acoustic windows',
+	'Technical difficulties'
+];
+
+// ─── FAST ──────────────────────────────────────────────────────────
+
 export const fastProcdocDefinition: ProcdocDefinition = {
 	findingsHelperText:
 		'Required views Cardiac window (subxiphoid or parasternal long acceptable) ' +
@@ -203,6 +214,343 @@ export const dvtProcdocDefinition: ProcdocDefinition = {
 					presentOptions: ['Incompletely compressible', 'Clot seen within the vein'],
 					absentOption: 'Completely compressible',
 					naOption: 'Not obtained'
+				}
+			]
+		}
+	]
+};
+
+// ─── Echo / Lung ───────────────────────────────────────────────────
+
+export const echolungProcdocDefinition: ProcdocDefinition = {
+	findingsHelperText:
+		'Cardiac: Parasternal long/short, apical 4-chamber, subxiphoid views.\n' +
+		'Lung: Bilateral anterior and lateral views evaluating for B-lines, ' +
+		'pleural effusion, consolidation, and lung sliding.',
+	sections: [],
+	limitationOptions: [
+		...STANDARD_LIMITATIONS,
+		'Subcutaneous emphysema',
+		'Mechanical ventilation artifact'
+	],
+	findingsGroups: [
+		{
+			header: '',
+			label: 'Indication',
+			required: true,
+			findings: [
+				{
+					kind: 'buttonGroup',
+					macroId: 'echo_indication',
+					options: [
+						'Dyspnea',
+						'Chest Pain',
+						'Hypotension',
+						'Hypoxia',
+						'Cardiac Arrest',
+						'Tachycardia'
+					],
+					multiSelect: true,
+					exclusiveOptions: new Set()
+				}
+			]
+		},
+		{
+			header: 'Cardiac',
+			required: false,
+			findings: [
+				{
+					kind: 'findingRow',
+					label: 'LV Function',
+					findingLabel: 'Reduced LV function',
+					macroId: 'echo_lv',
+					presentOptions: ['Reduced', 'Severely reduced'],
+					absentOption: 'Normal'
+				},
+				{
+					kind: 'findingRow',
+					label: 'RV Dilation',
+					findingLabel: 'RV dilation',
+					macroId: 'echo_rv',
+					presentOptions: ['Dilated', 'Indeterminate'],
+					absentOption: 'Normal'
+				},
+				{
+					kind: 'findingRow',
+					label: 'Pericardial Effusion',
+					findingLabel: 'Pericardial effusion',
+					macroId: 'echo_pericardium',
+					presentOptions: ['Effusion', 'Indeterminate'],
+					absentOption: 'No effusion'
+				},
+				{
+					kind: 'findingRow',
+					label: 'IVC',
+					findingLabel: 'IVC plethora',
+					macroId: 'echo_ivc',
+					presentOptions: ['Plethoric (>2.1 cm, <50% collapse)', 'Indeterminate'],
+					absentOption: 'Normal (<2.1 cm, >50% collapse)'
+				}
+			]
+		},
+		{
+			header: 'Lung',
+			required: false,
+			findings: [
+				{ kind: 'subHeader', title: 'Left Lung' },
+				{
+					kind: 'buttonGroup',
+					macroId: 'echo_lung_left',
+					options: ['A-lines (normal)', 'B-lines (≥3 per field)', 'Pleural Effusion', 'Consolidation'],
+					multiSelect: true,
+					exclusiveOptions: new Set(['A-lines (normal)']),
+					commentable: true
+				},
+				{ kind: 'subHeader', title: 'Right Lung' },
+				{
+					kind: 'buttonGroup',
+					macroId: 'echo_lung_right',
+					options: ['A-lines (normal)', 'B-lines (≥3 per field)', 'Pleural Effusion', 'Consolidation'],
+					multiSelect: true,
+					exclusiveOptions: new Set(['A-lines (normal)']),
+					commentable: true
+				}
+			]
+		}
+	]
+};
+
+// ─── Soft Tissue ───────────────────────────────────────────────────
+
+export const softTissueProcdocDefinition: ProcdocDefinition = {
+	findingsHelperText:
+		'Evaluate soft tissue with linear high-frequency probe. ' +
+		'Identify and measure any fluid collection, assess for foreign body, ' +
+		'and evaluate surrounding tissue.',
+	sections: [],
+	limitationOptions: [
+		...STANDARD_LIMITATIONS,
+		'Wound dressing in place',
+		'Overlying edema'
+	],
+	findingsGroups: [
+		{
+			header: '',
+			label: 'Indication',
+			required: true,
+			findings: [
+				{
+					kind: 'buttonGroup',
+					macroId: 'st_indication',
+					options: ['Abscess', 'Cellulitis', 'Foreign Body', 'Mass', 'Swelling'],
+					multiSelect: true,
+					exclusiveOptions: new Set()
+				}
+			]
+		},
+		{
+			header: 'Soft Tissue Findings',
+			required: false,
+			findings: [
+				{
+					kind: 'findingRow',
+					label: 'Fluid Collection',
+					findingLabel: 'Fluid collection',
+					macroId: 'st_collection',
+					presentOptions: ['Present - drainable', 'Present - not drainable', 'Indeterminate'],
+					absentOption: 'No fluid collection'
+				},
+				{
+					kind: 'findingRow',
+					label: 'Foreign Body',
+					findingLabel: 'Foreign body',
+					macroId: 'st_foreign_body',
+					presentOptions: ['Visualized', 'Indeterminate'],
+					absentOption: 'Not visualized'
+				},
+				{
+					kind: 'findingRow',
+					label: 'Cobblestoning',
+					findingLabel: 'Cobblestoning',
+					macroId: 'st_cobblestone',
+					presentOptions: ['Present'],
+					absentOption: 'Absent'
+				}
+			]
+		}
+	]
+};
+
+// ─── Gallbladder ───────────────────────────────────────────────────
+
+export const gallbladderProcdocDefinition: ProcdocDefinition = {
+	findingsHelperText:
+		'RUQ view with curvilinear probe. Evaluate gallbladder for stones, ' +
+		'wall thickening (>3 mm), pericholecystic fluid, and sonographic ' +
+		"Murphy's sign. Measure CBD if visualized (normal <6 mm).",
+	sections: [],
+	limitationOptions: [
+		...STANDARD_LIMITATIONS,
+		'Bowel gas',
+		'Non-fasting patient',
+		'Post-cholecystectomy'
+	],
+	findingsGroups: [
+		{
+			header: '',
+			label: 'Indication',
+			required: true,
+			findings: [
+				{
+					kind: 'buttonGroup',
+					macroId: 'gb_indication',
+					options: [
+						'RUQ Pain',
+						'Epigastric Pain',
+						'Nausea/Vomiting',
+						'Suspected Cholecystitis',
+						'Jaundice'
+					],
+					multiSelect: true,
+					exclusiveOptions: new Set()
+				}
+			]
+		},
+		{
+			header: 'Gallbladder',
+			required: false,
+			findings: [
+				{
+					kind: 'findingRow',
+					label: 'Gallstones',
+					findingLabel: 'Cholelithiasis',
+					macroId: 'gb_stones',
+					presentOptions: ['Present', 'Sludge only'],
+					absentOption: 'No stones'
+				},
+				{
+					kind: 'findingRow',
+					label: 'Wall Thickening',
+					findingLabel: 'Wall thickening',
+					macroId: 'gb_wall',
+					presentOptions: ['Thickened (>3 mm)', 'Indeterminate'],
+					absentOption: 'Normal (≤3 mm)'
+				},
+				{
+					kind: 'findingRow',
+					label: 'Pericholecystic Fluid',
+					findingLabel: 'Pericholecystic fluid',
+					macroId: 'gb_fluid',
+					presentOptions: ['Present', 'Indeterminate'],
+					absentOption: 'Absent'
+				},
+				{
+					kind: 'findingRow',
+					label: "Sonographic Murphy's",
+					findingLabel: "Sonographic Murphy's sign",
+					macroId: 'gb_murphys',
+					presentOptions: ['Positive'],
+					absentOption: 'Negative'
+				},
+				{
+					kind: 'findingRow',
+					label: 'CBD',
+					findingLabel: 'CBD dilation',
+					macroId: 'gb_cbd',
+					presentOptions: ['Dilated (>6 mm)', 'Indeterminate'],
+					absentOption: 'Normal (≤6 mm)',
+					naOption: 'Not visualized'
+				}
+			]
+		}
+	]
+};
+
+// ─── Obstetric / Pelvic ────────────────────────────────────────────
+
+export const obstetricProcdocDefinition: ProcdocDefinition = {
+	findingsHelperText:
+		'Transabdominal evaluation for intrauterine pregnancy (IUP). ' +
+		'Assess for fetal heart activity, gestational age, and free fluid in pelvis. ' +
+		'Transvaginal approach if transabdominal is non-diagnostic.',
+	sections: [],
+	limitationOptions: [
+		...STANDARD_LIMITATIONS,
+		'Early gestation (< 6 weeks)',
+		'Retroverted uterus',
+		'Bowel gas'
+	],
+	findingsGroups: [
+		{
+			header: '',
+			label: 'Indication',
+			required: true,
+			findings: [
+				{
+					kind: 'buttonGroup',
+					macroId: 'ob_indication',
+					options: [
+						'Vaginal Bleeding',
+						'Pelvic Pain',
+						'Pregnancy Confirmation',
+						'Abdominal Pain',
+						'Suspected Ectopic'
+					],
+					multiSelect: true,
+					exclusiveOptions: new Set()
+				}
+			]
+		},
+		{
+			header: 'Uterus',
+			required: false,
+			findings: [
+				{
+					kind: 'findingRow',
+					label: 'IUP',
+					findingLabel: 'Intrauterine pregnancy',
+					macroId: 'ob_iup',
+					presentOptions: ['Definite IUP', 'Probable IUP (gestational sac only)', 'Indeterminate'],
+					absentOption: 'No IUP visualized'
+				},
+				{
+					kind: 'findingRow',
+					label: 'Fetal Heart Activity',
+					findingLabel: 'Fetal heart activity',
+					macroId: 'ob_fhr',
+					presentOptions: ['Present'],
+					absentOption: 'Absent',
+					naOption: 'Not applicable'
+				},
+				{
+					kind: 'findingRow',
+					label: 'Fetal Number',
+					findingLabel: 'Multiple gestation',
+					macroId: 'ob_number',
+					presentOptions: ['Multiple gestation'],
+					absentOption: 'Singleton'
+				}
+			]
+		},
+		{
+			header: 'Pelvis',
+			required: false,
+			findings: [
+				{
+					kind: 'findingRow',
+					label: 'Free Fluid',
+					findingLabel: 'Pelvic free fluid',
+					macroId: 'ob_free_fluid',
+					presentOptions: ['Present', 'Large amount'],
+					absentOption: 'Absent'
+				},
+				{
+					kind: 'findingRow',
+					label: 'Adnexal Mass',
+					findingLabel: 'Adnexal mass',
+					macroId: 'ob_adnexal',
+					presentOptions: ['Visualized', 'Indeterminate'],
+					absentOption: 'Not visualized'
 				}
 			]
 		}
