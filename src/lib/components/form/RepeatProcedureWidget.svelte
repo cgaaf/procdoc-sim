@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { getAppState } from '$lib/state/context';
+	import { getExamState } from '$lib/state/context';
 
-	const state = getAppState();
+	const state = getExamState();
 
 	function toggleRepeat() {
 		state.setRepeatProcedure(!state.isRepeatProcedure);

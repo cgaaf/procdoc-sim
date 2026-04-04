@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { getAppState } from '$lib/state/context';
+	import { getExamState } from '$lib/state/context';
 
 	let { oncollapse }: { oncollapse: () => void } = $props();
 
-	const appState = getAppState();
+	const appState = getExamState();
 </script>
 
 <div class="px-3">

@@ -1,10 +1,10 @@
 import { getContext } from "svelte";
-import type { AppState } from "./app-state.svelte";
+import type { ExamState } from "./exam-state.svelte";
 
-const APP_STATE_KEY = Symbol("app-state");
+const EXAM_STATE_KEY = Symbol("exam-state");
 
-export function getAppState(): AppState {
-  return getContext<AppState>(APP_STATE_KEY);
+export function getExamState(): ExamState {
+  return getContext<ExamState>(EXAM_STATE_KEY);
 }
 
-export { APP_STATE_KEY };
+export { EXAM_STATE_KEY };

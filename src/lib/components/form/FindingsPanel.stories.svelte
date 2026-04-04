@@ -3,6 +3,7 @@
 	import FindingsPanel from './FindingsPanel.svelte';
 	import AppStateDecorator from '$lib/components/storybook/AppStateDecorator.svelte';
 	import { fastProcdocDefinition, dvtProcdocDefinition } from '$lib/data/procdoc-definitions';
+	import { examConfigs } from '$lib/exams';
 
 	const { Story } = defineMeta({
 		title: 'Form/FindingsPanel',
@@ -20,7 +21,8 @@
 		findingsGroups: fastProcdocDefinition.findingsGroups,
 		limitationOptions: fastProcdocDefinition.limitationOptions,
 		helperText: fastProcdocDefinition.findingsHelperText,
-		showRepeatProcedure: true
+		showRepeatProcedure: true,
+		interpretation: examConfigs.fast.interpretation
 	}}
 />
 
@@ -30,7 +32,8 @@
 		findingsGroups: fastProcdocDefinition.findingsGroups,
 		limitationOptions: fastProcdocDefinition.limitationOptions,
 		helperText: fastProcdocDefinition.findingsHelperText,
-		showRepeatProcedure: false
+		showRepeatProcedure: false,
+		interpretation: examConfigs.fast.interpretation
 	}}
 />
 
@@ -40,7 +43,8 @@
 		findingsGroups: dvtProcdocDefinition.findingsGroups,
 		limitationOptions: dvtProcdocDefinition.limitationOptions,
 		helperText: dvtProcdocDefinition.findingsHelperText,
-		showRepeatProcedure: true
+		showRepeatProcedure: true,
+		interpretation: examConfigs.dvt.interpretation
 	}}
 	decorators={[() => ({ Component: AppStateDecorator, props: { ultrasoundType: 'dvt' } })]}
 />

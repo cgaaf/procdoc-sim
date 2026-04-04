@@ -5,6 +5,7 @@
 		FindingRow as FindingRowType,
 		FindingsSubHeader
 	} from '$lib/types/procdoc-definition';
+	import type { InterpretationConfig } from '$lib/types/exam-config';
 	import FindingToggleButton from './FindingToggleButton.svelte';
 	import FindingsButtonGroup from './FindingsButtonGroup.svelte';
 	import RepeatProcedureWidget from './RepeatProcedureWidget.svelte';
@@ -14,12 +15,14 @@
 		findingsGroups,
 		limitationOptions = [],
 		helperText,
-		showRepeatProcedure = true
+		showRepeatProcedure = true,
+		interpretation = { kind: 'none' } as InterpretationConfig
 	}: {
 		findingsGroups: FindingsGroupSection[];
 		limitationOptions?: string[];
 		helperText?: string;
 		showRepeatProcedure?: boolean;
+		interpretation?: InterpretationConfig;
 	} = $props();
 
 	let collapsed = $state<Set<string>>(new Set());
@@ -172,7 +175,7 @@
 	{#if limitationOptions.length > 0}
 		<div class="border-t py-1" style:border-color="var(--color-divider)"></div>
 		<div class="pl-5">
-			<LimitationsWidget options={limitationOptions} />
+			<LimitationsWidget options={limitationOptions} {interpretation} />
 		</div>
 	{/if}
 </div>

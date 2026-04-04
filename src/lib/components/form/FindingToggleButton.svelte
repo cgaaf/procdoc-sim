@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { FindingRow } from '$lib/types/procdoc-definition';
-	import { getAppState } from '$lib/state/context';
+	import { getExamState } from '$lib/state/context';
 	import FindingCommentModal from './FindingCommentModal.svelte';
 
 	let { finding }: { finding: FindingRow } = $props();
 
-	const appState = getAppState();
+	const appState = getExamState();
 
 	type FindingState = 'present' | 'absent' | 'indeterminate' | 'none';
 

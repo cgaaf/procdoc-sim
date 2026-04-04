@@ -3,6 +3,7 @@
 	import LimitationsWidget from './LimitationsWidget.svelte';
 	import AppStateDecorator from '$lib/components/storybook/AppStateDecorator.svelte';
 	import { fastProcdocDefinition, dvtProcdocDefinition } from '$lib/data/procdoc-definitions';
+	import { examConfigs } from '$lib/exams';
 
 	const { Story } = defineMeta({
 		title: 'Form/LimitationsWidget',
@@ -14,11 +15,11 @@
 	});
 </script>
 
-<Story name="FAST No Selections" args={{ options: fastProcdocDefinition.limitationOptions }} />
+<Story name="FAST No Selections" args={{ options: fastProcdocDefinition.limitationOptions, interpretation: examConfigs.fast.interpretation }} />
 
 <Story
 	name="FAST With Preset"
-	args={{ options: fastProcdocDefinition.limitationOptions }}
+	args={{ options: fastProcdocDefinition.limitationOptions, interpretation: examConfigs.fast.interpretation }}
 	decorators={[
 		() => ({
 			Component: AppStateDecorator,
@@ -29,13 +30,13 @@
 
 <Story
 	name="DVT No Selections"
-	args={{ options: dvtProcdocDefinition.limitationOptions }}
+	args={{ options: dvtProcdocDefinition.limitationOptions, interpretation: examConfigs.dvt.interpretation }}
 	decorators={[() => ({ Component: AppStateDecorator, props: { ultrasoundType: 'dvt' } })]}
 />
 
 <Story
 	name="DVT Normal Bilateral"
-	args={{ options: dvtProcdocDefinition.limitationOptions }}
+	args={{ options: dvtProcdocDefinition.limitationOptions, interpretation: examConfigs.dvt.interpretation }}
 	decorators={[
 		() => ({
 			Component: AppStateDecorator,

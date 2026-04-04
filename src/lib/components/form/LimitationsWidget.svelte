@@ -1,9 +1,16 @@
 <script lang="ts">
-	import { getAppState } from '$lib/state/context';
+	import type { InterpretationConfig } from '$lib/types/exam-config';
+	import { getExamState } from '$lib/state/context';
 
-	let { options }: { options: string[] } = $props();
+	let {
+		options,
+		interpretation
+	}: {
+		options: string[];
+		interpretation: InterpretationConfig;
+	} = $props();
 
-	const state = getAppState();
+	const state = getExamState();
 
 	let noneSelected = $derived(state.selectedLimitations.size === 0);
 
@@ -38,11 +45,12 @@
 	const fastInterpretationOptions = ['FAST Negative x 4', 'E-FAST Negative x 5', 'Positive FAST'];
 
 	function handleFastInterpTap(option: string) {
+		if (interpretation.kind !== 'fast') return;
 		const currentValue = state.macroSelections.get('macro_8');
 		if (option === 'FAST Negative x 4') {
-			state.applyNegativeFAST4();
+			interpretation.applyNegativeFAST4(state);
 		} else if (option === 'E-FAST Negative x 5') {
-			state.applyNegativeEFAST5();
+			interpretation.applyNegativeEFAST5(state);
 		} else {
 			if (currentValue === option) {
 				state.setMacroSelection('macro_8', null);
@@ -79,54 +87,56 @@
 		{/each}
 	</div>
 
-	<p class="mt-4 font-epic text-[13px] font-bold" style:color="var(--color-text-primary)">Interpretation:</p>
-	<div class="mt-1">
-		{#if state.selectedUltrasoundType === 'dvt'}
-			{@const dvtInterp = state.macroSelections.get('dvt_interp')}
-			{@const label = dvtInterp ?? 'Pending (fill vessel findings)'}
-			{@const isPositive = dvtInterp === 'Positive for DVT'}
-			{@const isNegative = dvtInterp === 'Negative for DVT'}
-			<div
-				class="inline-block rounded-[3px] border px-2.5 py-[5px] font-epic text-[12px]"
-				class:font-semibold={dvtInterp != null}
-				class:italic={dvtInterp == null}
-				style:background-color={isPositive
-					? 'var(--color-finding-present-bg)'
-					: isNegative
-						? 'var(--color-finding-absent-bg)'
-						: 'var(--color-btn-default-bg)'}
-				style:border-color={isPositive
-					? 'var(--color-finding-present-border)'
-					: isNegative
-						? 'var(--color-finding-absent-border)'
-						: 'var(--color-btn-default-border)'}
-				style:color={isPositive
-					? 'var(--color-finding-present-icon)'
-					: isNegative
-						? 'var(--color-finding-absent-icon)'
-						: 'var(--color-text-primary)'}
-			>
-				{label}
-			</div>
-		{:else}
-			{@const currentValue = state.macroSelections.get('macro_8')}
-			<div class="flex gap-1">
-				{#each fastInterpretationOptions as option}
-					{@const isSelected = currentValue === option}
-					<button
-						class="rounded-[3px] border px-2.5 py-[5px] font-epic text-[12px] transition-colors"
-						class:font-semibold={isSelected}
-						style:background-color={isSelected ? 'var(--color-btn-selected-bg)' : 'var(--color-btn-default-bg)'}
-						style:border-color={isSelected ? 'var(--color-btn-selected-border)' : 'var(--color-btn-default-border)'}
-						style:color={isSelected ? 'var(--color-btn-selected-text)' : 'var(--color-text-primary)'}
-						onclick={() => handleFastInterpTap(option)}
-					>
-						{option}
-					</button>
-				{/each}
-			</div>
-		{/if}
-	</div>
+	{#if interpretation.kind !== 'none'}
+		<p class="mt-4 font-epic text-[13px] font-bold" style:color="var(--color-text-primary)">Interpretation:</p>
+		<div class="mt-1">
+			{#if interpretation.kind === 'dvt'}
+				{@const dvtInterp = state.macroSelections.get(interpretation.macroId)}
+				{@const label = dvtInterp ?? 'Pending (fill vessel findings)'}
+				{@const isPositive = dvtInterp === 'Positive for DVT'}
+				{@const isNegative = dvtInterp === 'Negative for DVT'}
+				<div
+					class="inline-block rounded-[3px] border px-2.5 py-[5px] font-epic text-[12px]"
+					class:font-semibold={dvtInterp != null}
+					class:italic={dvtInterp == null}
+					style:background-color={isPositive
+						? 'var(--color-finding-present-bg)'
+						: isNegative
+							? 'var(--color-finding-absent-bg)'
+							: 'var(--color-btn-default-bg)'}
+					style:border-color={isPositive
+						? 'var(--color-finding-present-border)'
+						: isNegative
+							? 'var(--color-finding-absent-border)'
+							: 'var(--color-btn-default-border)'}
+					style:color={isPositive
+						? 'var(--color-finding-present-icon)'
+						: isNegative
+							? 'var(--color-finding-absent-icon)'
+							: 'var(--color-text-primary)'}
+				>
+					{label}
+				</div>
+			{:else if interpretation.kind === 'fast'}
+				{@const currentValue = state.macroSelections.get('macro_8')}
+				<div class="flex gap-1">
+					{#each fastInterpretationOptions as option}
+						{@const isSelected = currentValue === option}
+						<button
+							class="rounded-[3px] border px-2.5 py-[5px] font-epic text-[12px] transition-colors"
+							class:font-semibold={isSelected}
+							style:background-color={isSelected ? 'var(--color-btn-selected-bg)' : 'var(--color-btn-default-bg)'}
+							style:border-color={isSelected ? 'var(--color-btn-selected-border)' : 'var(--color-btn-default-border)'}
+							style:color={isSelected ? 'var(--color-btn-selected-text)' : 'var(--color-text-primary)'}
+							onclick={() => handleFastInterpTap(option)}
+						>
+							{option}
+						</button>
+					{/each}
+				</div>
+			{/if}
+		</div>
+	{/if}
 
 	<p class="mt-4 font-epic text-[13px] font-bold" style:color="var(--color-text-primary)">Additional findings:</p>
 	<textarea

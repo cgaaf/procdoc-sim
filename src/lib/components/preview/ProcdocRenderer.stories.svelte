@@ -45,12 +45,4 @@
 	]}
 />
 
-<Story
-	name="Empty State"
-	decorators={[
-		() => ({
-			Component: AppStateDecorator,
-			props: { ultrasoundType: 'cardiac' }
-		})
-	]}
-/>
+<Story name="Empty State" />

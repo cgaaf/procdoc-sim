@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { FindingsButtonGroupDef } from '$lib/types/procdoc-definition';
-	import { getAppState } from '$lib/state/context';
+	import { getExamState } from '$lib/state/context';
 	import FindingCommentModal from './FindingCommentModal.svelte';
 
 	let { group }: { group: FindingsButtonGroupDef } = $props();
 
-	const appState = getAppState();
+	const appState = getExamState();
 
 	let commentModalOpen = $state(false);
 	let hasComment = $derived(group.commentable ? appState.getComment(group.macroId) !== '' : false);

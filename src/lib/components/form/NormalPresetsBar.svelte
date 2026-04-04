@@ -1,25 +1,11 @@
 <script lang="ts">
-	import { getAppState } from '$lib/state/context';
+	import type { ExamPreset } from '$lib/types/exam-config';
+	import { getExamState } from '$lib/state/context';
 	import EpicButton from '$lib/components/ui/EpicButton.svelte';
 
-	const state = getAppState();
+	let { presets }: { presets: ExamPreset[] } = $props();
 
-	let presets = $derived.by(() => {
-		if (state.selectedUltrasoundType === 'dvt') {
-			return [
-				{ label: 'Normal Left', action: () => state.applyNormalDvtLeft() },
-				{ label: 'Normal Right', action: () => state.applyNormalDvtRight() },
-				{ label: 'Normal Bilateral', action: () => state.applyNormalDvtBilateral() }
-			];
-		}
-		return [
-			{ label: 'Normal Cardiac', action: () => state.applyNormalCardiac() },
-			{ label: 'Normal Lung', action: () => state.applyNormalLung() },
-			{ label: 'Normal Abdomen', action: () => state.applyNormalAbdomen() },
-			{ label: 'Normal FAST', action: () => state.applyNormalFAST() },
-			{ label: 'Normal E-FAST', action: () => state.applyNormalEFAST() }
-		];
-	});
+	const state = getExamState();
 </script>
 
 <div class="flex items-center px-3">
@@ -29,13 +15,13 @@
 			<EpicButton
 				label="{i + 1}. {preset.label}"
 				compact
-				onclick={preset.action}
+				onclick={() => preset.apply(state)}
 			/>
 		{/each}
 		<EpicButton
 			label="Clear All"
 			compact
-			onclick={() => state.selectUltrasoundType(state.selectedUltrasoundType!)}
+			onclick={() => state.reset()}
 		/>
 	</div>
 </div>

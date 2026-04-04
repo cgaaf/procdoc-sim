@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getAppState } from '$lib/state/context';
+	import { getExamState } from '$lib/state/context';
 
 	let {
 		macroId,
@@ -11,15 +11,15 @@
 		blankSingle?: boolean;
 	} = $props();
 
-	const state = getAppState();
+	const examState = getExamState();
 	let open = $state(false);
 
-	let selected = $derived(state.macroSelections.get(macroId));
+	let selected = $derived(examState.macroSelections.get(macroId));
 	let displayText = $derived(selected ?? (blankSingle ? '___' : options[0]));
 	let hasSelection = $derived(selected != null);
 
 	function selectOption(option: string) {
-		state.setMacroSelection(macroId, option);
+		examState.setMacroSelection(macroId, option);
 		open = false;
 	}
 </script>

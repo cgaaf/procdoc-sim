@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getAppState } from '$lib/state/context';
+	import { getExamState } from '$lib/state/context';
 
 	let {
 		label,
@@ -12,7 +12,7 @@
 		onclose: () => void;
 	} = $props();
 
-	const appState = getAppState();
+	const appState = getExamState();
 
 	let dialogEl: HTMLDialogElement;
 	let text = $state('');
