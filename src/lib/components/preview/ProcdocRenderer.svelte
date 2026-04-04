@@ -1,26 +1,16 @@
 <script lang="ts">
   import { getExamState } from "$lib/state/context";
 
-  let { oncollapse }: { oncollapse: () => void } = $props();
-
   const appState = getExamState();
 </script>
 
 <div class="px-3">
-  <button class="mb-1 flex w-full items-center" onclick={oncollapse}>
-    <span
-      class="text-[18px] leading-none"
-      style:color="var(--color-text-heading)"
-    >
-      ‹
-    </span>
-    <h2
-      class="ml-0.5 font-epic text-[14px] font-bold"
-      style:color="var(--color-text-heading)"
-    >
-      Generated Note Preview
-    </h2>
-  </button>
+  <h2
+    class="mb-1 font-epic text-[14px] font-bold"
+    style:color="var(--color-text-heading)"
+  >
+    Generated Note Preview
+  </h2>
   <div
     class="w-full select-text rounded-[2px] border p-2.5"
     style:background-color="var(--color-bg-surface)"
