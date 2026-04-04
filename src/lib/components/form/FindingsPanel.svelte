@@ -154,10 +154,11 @@
           onclick={() => toggleCollapse(group.header)}
         >
           <span
-            class="text-[18px] leading-none"
+            class="inline-block text-[18px] leading-none transition-transform duration-150"
             style:color="var(--color-text-heading)"
+            style:transform={isCollapsed ? "rotate(0deg)" : "rotate(90deg)"}
           >
-            {isCollapsed ? "›" : "⌄"}
+            ›
           </span>
           <span
             class="ml-0.5 font-epic text-[14px] font-bold"
