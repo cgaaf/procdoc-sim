@@ -1,0 +1,8 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "useTabs": false,
+  "tabWidth": 2,
+  "ignorePatterns": [".vscode"]
+  // TODO: oxfmt does not yet format .svelte files (tracked: https://github.com/oxc-project/oxc/issues/18708)
+  // Once supported, remove prettier + prettier-plugin-svelte and let oxfmt handle everything
+}
