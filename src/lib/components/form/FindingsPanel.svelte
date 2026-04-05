@@ -133,7 +133,7 @@
         <!-- Headerless section -->
         <div class="border-t" style:border-color="var(--color-divider)"></div>
         {#if group.label}
-          <div class="flex items-center gap-1.5 pb-1.5 pl-5">
+          <div class="flex items-center gap-1.5 pt-3 pb-1.5 pl-5">
             <span
               class="font-epic text-[13px] font-bold"
               style:color="var(--color-text-heading)"

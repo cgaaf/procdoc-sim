@@ -8,7 +8,6 @@
   import NormalPresetsBar from "$lib/components/form/NormalPresetsBar.svelte";
   import UltrasoundTypeGrid from "$lib/components/form/UltrasoundTypeGrid.svelte";
   import FindingsPanel from "$lib/components/form/FindingsPanel.svelte";
-  import DateTimeRow from "$lib/components/form/DateTimeRow.svelte";
   import ProcdocRenderer from "$lib/components/preview/ProcdocRenderer.svelte";
 
   let { examType }: { examType: UltrasoundType } = $props();
@@ -106,7 +105,6 @@
         />
       {/if}
 
-      <DateTimeRow />
       <div class="h-6"></div>
     </div>
   </div>
