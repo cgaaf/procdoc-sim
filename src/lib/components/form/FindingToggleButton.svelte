@@ -85,7 +85,7 @@
     {@const indeterminateValue = "Indeterminate"}
     {@const labels = finding.triStateLabels ?? { present: "Positive", absent: "Negative", indeterminate: "Indeterminate" }}
     <div class="flex w-[340px] gap-[3px]">
-      {#each [[positiveValue, labels.present], [negativeValue, labels.absent], [indeterminateValue, labels.indeterminate]] as [value, label] (value)}
+      {#each [[negativeValue, labels.absent], [positiveValue, labels.present], [indeterminateValue, labels.indeterminate]] as [value, label] (value)}
         <button
           class="h-[30px] flex-1 rounded-[3px] border font-epic text-[11px] transition-colors"
           style:background-color={selected === value

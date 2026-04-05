@@ -306,10 +306,10 @@ export const echolungProcdocDefinition: ProcdocDefinition = {
           label: "Pericardial Effusion",
           findingLabel: "Pericardial effusion",
           macroId: "echo_pericardium",
-          presentOptions: ["Effusion"],
-          absentOption: "No effusion",
+          presentOptions: ["Present"],
+          absentOption: "Absent",
           triState: true,
-          triStateLabels: { present: "Effusion", absent: "No Effusion", indeterminate: "Indeterminate" },
+          triStateLabels: { present: "Pericardial Effusion", absent: "No Pericardial Effusion", indeterminate: "Indeterminate" },
         },
         {
           kind: "findingRow",
