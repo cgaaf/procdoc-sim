@@ -19,7 +19,7 @@ export const examConfigs: Record<string, ExamConfig> = {
 export const SLUG_TO_TYPE: Record<string, UltrasoundType> = {
   fast: "fast",
   dvt: "dvt",
-  echolung: "echolung",
+  "cardiac-lung": "echolung",
   "soft-tissue": "soft_tissue",
   gallbladder: "gallbladder",
   obstetric: "obstetric",

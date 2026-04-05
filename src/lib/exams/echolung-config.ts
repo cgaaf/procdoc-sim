@@ -4,8 +4,8 @@ import { buildEchoLungNote } from "$lib/logic/note-assembler";
 
 export const echolungConfig: ExamConfig = {
   type: "echolung",
-  slug: "echolung",
-  displayName: "Echo/Lung",
+  slug: "cardiac-lung",
+  displayName: "Cardiac/Lung",
   definition: echolungProcdocDefinition,
   templateParts: [],
   buildNote: buildEchoLungNote,

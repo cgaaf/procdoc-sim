@@ -12,15 +12,11 @@
   <SectionHeader title="Procedure Performed" />
   <div class="flex flex-wrap gap-1.5">
     {#each ULTRASOUND_TYPES as type (type.value)}
-      {#if type.value === "cardiac"}
-        <EpicButton label={type.displayName} selected={false} disabled />
-      {:else}
-        <EpicButton
-          label={type.displayName}
-          selected={state.config.type === type.value}
-          onclick={() => goto(`/${type.slug}`)}
-        />
-      {/if}
+      <EpicButton
+        label={type.displayName}
+        selected={state.config.type === type.value}
+        onclick={() => goto(`/${type.slug}`)}
+      />
     {/each}
   </div>
 </div>
