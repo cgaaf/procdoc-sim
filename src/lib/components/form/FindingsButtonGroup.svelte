@@ -54,12 +54,18 @@
 </script>
 
 <div class="flex flex-wrap items-center gap-1.5 py-[2px]">
+  {#if group.label}
+    <div
+      class="w-[140px] shrink-0 font-epic text-[12px] font-bold"
+      style:color="var(--color-text-primary)"
+    >
+      {group.label}
+    </div>
+  {/if}
   {#each group.options as option (option)}
     {@const isSelected = selectedSet.has(option)}
     <button
-      class="bold-stable rounded-[3px] border px-2.5 py-1.5 font-epic text-[11px] transition-colors"
-      class:font-semibold={isSelected}
-      data-text={option}
+      class="rounded-[3px] border px-2.5 py-1.5 font-epic text-[11px] transition-colors"
       style:background-color={isSelected
         ? "var(--color-btn-selected-bg)"
         : "var(--color-btn-default-bg)"}
@@ -117,34 +123,9 @@
 
 {#if commentModalOpen}
   <FindingCommentModal
-    label={group.macroId === "macro_7_left"
-      ? "Left Hemithorax"
-      : group.macroId === "macro_7_right"
-        ? "Right Hemithorax"
-        : group.macroId}
+    label={group.label ?? group.macroId}
     macroId={group.macroId}
     onclose={() => (commentModalOpen = false)}
   />
 {/if}
 
-<style>
-  /* Hidden bold reserve: an invisible pseudo-element always renders the
-	   button text in bold, reserving the maximum width so toggling
-	   font-weight on the visible text never causes a size shift. */
-  .bold-stable {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-  .bold-stable::after {
-    content: attr(data-text);
-    font-weight: 600;
-    height: 0;
-    overflow: hidden;
-    visibility: hidden;
-    display: block;
-    pointer-events: none;
-  }
-</style>

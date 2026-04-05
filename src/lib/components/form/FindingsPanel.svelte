@@ -73,12 +73,12 @@
   {/if}
 {/snippet}
 
-{#snippet findingsContent(items: FindingsItem[])}
+{#snippet findingsContent(items: FindingsItem[], layout?: "vertical" | "columns")}
   {#if hasSubHeaders(items)}
     {@const columns = splitBySubHeader(items)}
-    <div class="flex gap-2 pl-5">
+    <div class={layout === "vertical" ? "pl-5" : "flex gap-2 pl-5"}>
       {#each columns as col (col.header)}
-        <div class="flex-1">
+        <div class={layout === "vertical" ? "" : "flex-1"}>
           <p
             class="mb-1.5 mt-0.5 font-epic text-[13px] font-bold"
             style:color="var(--color-text-heading)"
@@ -89,6 +89,12 @@
             {@render findingsItem(item)}
           {/each}
         </div>
+      {/each}
+    </div>
+  {:else if layout === "vertical"}
+    <div class="pl-5">
+      {#each items as item, i (i)}
+        {@render findingsItem(item)}
       {/each}
     </div>
   {:else}
@@ -146,6 +152,9 @@
             {@render findingsItem(item)}
           {/each}
         </div>
+        {#if showRepeatProcedure}
+          <RepeatProcedureWidget />
+        {/if}
       {:else}
         <!-- Collapsible section -->
         {@const isCollapsed = collapsed.has(group.header)}
@@ -172,15 +181,11 @@
           ></span>
         </button>
         {#if !isCollapsed}
-          {@render findingsContent(group.findings)}
+          {@render findingsContent(group.findings, group.layout)}
         {/if}
       {/if}
     </div>
   {/each}
-
-  {#if showRepeatProcedure}
-    <RepeatProcedureWidget />
-  {/if}
 
   {#if limitationOptions.length > 0}
     <div class="border-t py-1" style:border-color="var(--color-divider)"></div>

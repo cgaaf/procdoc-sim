@@ -20,24 +20,14 @@
     return "none";
   });
 
+  let isSelected = $derived(currentState !== "none");
+
   let bgColor = $derived(
-    currentState === "present"
-      ? "var(--color-finding-present-bg)"
-      : currentState === "absent"
-        ? "var(--color-finding-absent-bg)"
-        : currentState === "indeterminate"
-          ? "var(--color-finding-indeterminate-bg)"
-          : "var(--color-finding-null-bg)",
+    isSelected ? "var(--color-btn-selected-bg)" : "var(--color-finding-null-bg)",
   );
 
   let borderColor = $derived(
-    currentState === "present"
-      ? "var(--color-finding-present-border)"
-      : currentState === "absent"
-        ? "var(--color-finding-absent-border)"
-        : currentState === "indeterminate"
-          ? "var(--color-finding-indeterminate-border)"
-          : "var(--color-finding-null-border)",
+    isSelected ? "var(--color-btn-selected-border)" : "var(--color-finding-null-border)",
   );
 
   let commentModalOpen = $state(false);
@@ -93,55 +83,25 @@
     {@const positiveValue = finding.presentOptions[0]}
     {@const negativeValue = finding.absentOption}
     {@const indeterminateValue = "Indeterminate"}
-    <div class="flex w-[240px] gap-[3px]">
-      <!-- Positive button -->
-      <button
-        class="bold-stable h-[30px] flex-1 rounded-[3px] border font-epic text-[11px] transition-colors"
-        class:font-semibold={selected === positiveValue}
-        data-text="Positive"
-        style:background-color={selected === positiveValue
-          ? "var(--color-finding-present-icon)"
-          : "var(--color-finding-null-bg)"}
-        style:border-color={selected === positiveValue
-          ? "var(--color-finding-present-icon)"
-          : "var(--color-finding-null-border)"}
-        style:color={selected === positiveValue ? "white" : "#757575"}
-        onclick={() => onTriStateTap(positiveValue)}
-      >
-        Positive
-      </button>
-      <!-- Negative button -->
-      <button
-        class="bold-stable h-[30px] flex-1 rounded-[3px] border font-epic text-[11px] transition-colors"
-        class:font-semibold={selected === negativeValue}
-        data-text="Negative"
-        style:background-color={selected === negativeValue
-          ? "var(--color-finding-absent-icon)"
-          : "var(--color-finding-null-bg)"}
-        style:border-color={selected === negativeValue
-          ? "var(--color-finding-absent-icon)"
-          : "var(--color-finding-null-border)"}
-        style:color={selected === negativeValue ? "white" : "#757575"}
-        onclick={() => onTriStateTap(negativeValue)}
-      >
-        Negative
-      </button>
-      <!-- Indeterminate button -->
-      <button
-        class="bold-stable h-[30px] flex-1 rounded-[3px] border font-epic text-[11px] transition-colors"
-        class:font-semibold={selected === indeterminateValue}
-        data-text="Indeterminate"
-        style:background-color={selected === indeterminateValue
-          ? "var(--color-finding-indeterminate-icon)"
-          : "var(--color-finding-null-bg)"}
-        style:border-color={selected === indeterminateValue
-          ? "var(--color-finding-indeterminate-icon)"
-          : "var(--color-finding-null-border)"}
-        style:color={selected === indeterminateValue ? "white" : "#757575"}
-        onclick={() => onTriStateTap(indeterminateValue)}
-      >
-        Indeterminate
-      </button>
+    {@const labels = finding.triStateLabels ?? { present: "Positive", absent: "Negative", indeterminate: "Indeterminate" }}
+    <div class="flex w-[340px] gap-[3px]">
+      {#each [[positiveValue, labels.present], [negativeValue, labels.absent], [indeterminateValue, labels.indeterminate]] as [value, label] (value)}
+        <button
+          class="h-[30px] flex-1 rounded-[3px] border font-epic text-[11px] transition-colors"
+          style:background-color={selected === value
+            ? "var(--color-btn-selected-bg)"
+            : "var(--color-btn-default-bg)"}
+          style:border-color={selected === value
+            ? "var(--color-btn-selected-border)"
+            : "var(--color-btn-default-border)"}
+          style:color={selected === value
+            ? "var(--color-btn-selected-text)"
+            : "var(--color-text-primary)"}
+          onclick={() => onTriStateTap(value)}
+        >
+          {label}
+        </button>
+      {/each}
     </div>
   {:else}
     <!-- Standard +/label/− toggle -->
@@ -149,19 +109,15 @@
       class="flex w-[200px] rounded-[3px] border"
       style:border-color={borderColor}
     >
-      <!-- Plus button (present = pathology = RED) -->
+      <!-- Plus button -->
       <button
         class="flex h-[30px] w-[28px] shrink-0 items-center justify-center border-x-[0.5px]"
-        style:background-color={currentState === "present"
-          ? "var(--color-finding-present-icon)"
-          : currentState === "indeterminate"
-            ? "var(--color-finding-indeterminate-icon)"
-            : "transparent"}
-        style:border-color={currentState === "present"
-          ? "var(--color-finding-present-icon)"
-          : currentState === "indeterminate"
-            ? "var(--color-finding-indeterminate-icon)"
-            : "var(--color-finding-null-border)"}
+        style:background-color={currentState === "present" || currentState === "indeterminate"
+          ? "var(--color-btn-selected-bg)"
+          : "transparent"}
+        style:border-color={currentState === "present" || currentState === "indeterminate"
+          ? "var(--color-btn-selected-border)"
+          : "var(--color-finding-null-border)"}
         onclick={onPresentTap}
       >
         <span
@@ -177,21 +133,21 @@
       <div
         class="flex flex-1 items-center justify-center overflow-hidden px-2 py-1.5 text-center font-epic text-[11px] font-semibold"
         style:background-color={bgColor}
-        style:color={currentState === "none"
-          ? "#757575"
-          : "var(--color-text-primary)"}
+        style:color={isSelected
+          ? "var(--color-btn-selected-text)"
+          : "#757575"}
       >
         <span class="truncate">{finding.findingLabel}</span>
       </div>
 
-      <!-- Minus button (absent = normal = GREEN) -->
+      <!-- Minus button -->
       <button
         class="flex h-[30px] w-[28px] shrink-0 items-center justify-center border-x-[0.5px]"
         style:background-color={currentState === "absent"
-          ? "var(--color-finding-absent-icon)"
+          ? "var(--color-btn-selected-bg)"
           : "transparent"}
         style:border-color={currentState === "absent"
-          ? "var(--color-finding-absent-icon)"
+          ? "var(--color-btn-selected-border)"
           : "var(--color-finding-null-border)"}
         onclick={onAbsentTap}
       >
@@ -252,25 +208,3 @@
     onclose={() => (commentModalOpen = false)}
   />
 {/if}
-
-<style>
-  /* Hidden bold reserve: an invisible pseudo-element always renders the
-	   button text in bold, reserving the maximum width so toggling
-	   font-weight on the visible text never causes a size shift. */
-  .bold-stable {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-  .bold-stable::after {
-    content: attr(data-text);
-    font-weight: 600;
-    height: 0;
-    overflow: hidden;
-    visibility: hidden;
-    display: block;
-    pointer-events: none;
-  }
-</style>

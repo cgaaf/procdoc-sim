@@ -45,6 +45,7 @@ export const fastProcdocDefinition: ProcdocDefinition = {
     {
       header: "Cardiac",
       required: false,
+      layout: "vertical",
       findings: [
         {
           kind: "findingRow",
@@ -54,6 +55,11 @@ export const fastProcdocDefinition: ProcdocDefinition = {
           presentOptions: ["Positive"],
           absentOption: "Negative",
           triState: true,
+          triStateLabels: {
+            present: "Pericardial Effusion",
+            absent: "No Effusion",
+            indeterminate: "Indeterminate",
+          },
         },
         {
           kind: "findingRow",
@@ -63,25 +69,31 @@ export const fastProcdocDefinition: ProcdocDefinition = {
           presentOptions: ["Positive"],
           absentOption: "Negative",
           triState: true,
+          triStateLabels: {
+            present: "Pericardial Effusion",
+            absent: "No Effusion",
+            indeterminate: "Indeterminate",
+          },
         },
       ],
     },
     {
       header: "Thoracic",
       required: false,
+      layout: "vertical",
       findings: [
-        { kind: "subHeader", title: "Left Hemithorax" },
         {
           kind: "buttonGroup",
+          label: "Left Hemithorax",
           macroId: "macro_7_left",
           options: ["Normal Lung Slide", "Pneumothorax", "Hemothorax", "Indeterminate"],
           multiSelect: true,
           exclusiveOptions: new Set(["Normal Lung Slide", "Indeterminate"]),
           commentable: true,
         },
-        { kind: "subHeader", title: "Right Hemithorax" },
         {
           kind: "buttonGroup",
+          label: "Right Hemithorax",
           macroId: "macro_7_right",
           options: ["Normal Lung Slide", "Pneumothorax", "Hemothorax", "Indeterminate"],
           multiSelect: true,
@@ -93,6 +105,7 @@ export const fastProcdocDefinition: ProcdocDefinition = {
     {
       header: "Abdominal",
       required: false,
+      layout: "vertical",
       findings: [
         {
           kind: "findingRow",
@@ -102,6 +115,7 @@ export const fastProcdocDefinition: ProcdocDefinition = {
           presentOptions: ["Positive"],
           absentOption: "Negative",
           triState: true,
+          triStateLabels: { present: "Free Fluid", absent: "No Free Fluid", indeterminate: "Indeterminate" },
         },
         {
           kind: "findingRow",
@@ -111,6 +125,7 @@ export const fastProcdocDefinition: ProcdocDefinition = {
           presentOptions: ["Positive"],
           absentOption: "Negative",
           triState: true,
+          triStateLabels: { present: "Free Fluid", absent: "No Free Fluid", indeterminate: "Indeterminate" },
         },
         {
           kind: "findingRow",
@@ -120,6 +135,7 @@ export const fastProcdocDefinition: ProcdocDefinition = {
           presentOptions: ["Positive"],
           absentOption: "Negative",
           triState: true,
+          triStateLabels: { present: "Free Fluid", absent: "No Free Fluid", indeterminate: "Indeterminate" },
         },
       ],
     },

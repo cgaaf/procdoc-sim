@@ -28,6 +28,8 @@ export interface FindingsGroupSection {
   label?: string;
   required: boolean;
   findings: FindingsItem[];
+  /** When 'vertical', render findings in a single column instead of the default two-column split */
+  layout?: "vertical" | "columns";
 }
 
 // --- Findings item discriminated union ---
@@ -53,10 +55,13 @@ export interface FindingRow {
   naOption?: string;
   /** Render as 3 equal Positive / Negative / Indeterminate buttons instead of the +/−  toggle */
   triState?: boolean;
+  /** Custom display labels for triState buttons (stored values stay unchanged) */
+  triStateLabels?: { present: string; absent: string; indeterminate: string };
 }
 
 export interface FindingsButtonGroupDef {
   kind: "buttonGroup";
+  label?: string;
   macroId: string;
   options: string[];
   multiSelect: boolean;
