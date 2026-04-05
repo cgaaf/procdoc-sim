@@ -29,5 +29,9 @@ export type InterpretationConfig =
       applyNegativeFAST4: (state: ExamState) => void;
       applyNegativeEFAST5: (state: ExamState) => void;
     }
-  | { kind: "dvt"; macroId: string }
+  | {
+      kind: "buttons";
+      macroId: string;
+      options: string[];
+    }
   | { kind: "none" };

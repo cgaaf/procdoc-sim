@@ -110,32 +110,33 @@
       Interpretation:
     </p>
     <div class="mt-1">
-      {#if interpretation.kind === "dvt"}
-        {@const dvtInterp = state.macroSelections.get(interpretation.macroId)}
-        {@const label = dvtInterp ?? "Pending (fill vessel findings)"}
-        {@const isPositive = dvtInterp === "Positive for DVT"}
-        {@const isNegative = dvtInterp === "Negative for DVT"}
-        <div
-          class="inline-block rounded-[3px] border px-2.5 py-[5px] font-epic text-[12px]"
-          class:font-semibold={dvtInterp != null}
-          class:italic={dvtInterp == null}
-          style:background-color={isPositive
-            ? "var(--color-finding-present-bg)"
-            : isNegative
-              ? "var(--color-finding-absent-bg)"
-              : "var(--color-btn-default-bg)"}
-          style:border-color={isPositive
-            ? "var(--color-finding-present-border)"
-            : isNegative
-              ? "var(--color-finding-absent-border)"
-              : "var(--color-btn-default-border)"}
-          style:color={isPositive
-            ? "var(--color-finding-present-icon)"
-            : isNegative
-              ? "var(--color-finding-absent-icon)"
-              : "var(--color-text-primary)"}
-        >
-          {label}
+      {#if interpretation.kind === "buttons"}
+        {@const currentValue = state.macroSelections.get(interpretation.macroId)}
+        <div class="flex flex-wrap gap-1">
+          {#each interpretation.options as option (option)}
+            {@const isSelected = currentValue === option}
+            <button
+              class="rounded-[3px] border px-2.5 py-[5px] font-epic text-[12px] transition-colors"
+              style:background-color={isSelected
+                ? "var(--color-btn-selected-bg)"
+                : "var(--color-btn-default-bg)"}
+              style:border-color={isSelected
+                ? "var(--color-btn-selected-border)"
+                : "var(--color-btn-default-border)"}
+              style:color={isSelected
+                ? "var(--color-btn-selected-text)"
+                : "var(--color-text-primary)"}
+              onclick={() => {
+                if (currentValue === option) {
+                  state.setMacroSelection(interpretation.macroId, null);
+                } else {
+                  state.setMacroSelection(interpretation.macroId, option);
+                }
+              }}
+            >
+              {option}
+            </button>
+          {/each}
         </div>
       {:else if interpretation.kind === "fast"}
         {@const currentValue = state.macroSelections.get("macro_8")}

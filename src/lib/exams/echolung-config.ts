@@ -10,6 +10,6 @@ export const echolungConfig: ExamConfig = {
   templateParts: [],
   buildNote: buildEchoLungNote,
   showRepeatProcedure: true,
-  interpretation: { kind: "none" },
+  interpretation: { kind: "buttons", macroId: "echo_interp", options: ["Normal", "Abnormal cardiac findings", "Abnormal lung findings", "Indeterminate"] },
   presets: [],
 };

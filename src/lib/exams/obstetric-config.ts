@@ -10,6 +10,6 @@ export const obstetricConfig: ExamConfig = {
   templateParts: [],
   buildNote: buildObstetricNote,
   showRepeatProcedure: true,
-  interpretation: { kind: "none" },
+  interpretation: { kind: "buttons", macroId: "ob_interp", options: ["IUP confirmed", "No IUP identified", "Ectopic pregnancy concern", "Indeterminate"] },
   presets: [],
 };

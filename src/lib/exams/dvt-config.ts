@@ -38,7 +38,7 @@ export const dvtConfig: ExamConfig = {
   templateParts: parseTemplate(dvtTemplate),
   buildNote: buildDvtNote,
   showRepeatProcedure: false,
-  interpretation: { kind: "dvt", macroId: "dvt_interp" },
+  interpretation: { kind: "buttons", macroId: "dvt_interp", options: ["Negative for DVT", "Positive for DVT", "Indeterminate"] },
   presets: [
     {
       label: "Normal Left",
