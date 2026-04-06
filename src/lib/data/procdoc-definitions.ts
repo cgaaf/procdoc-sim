@@ -154,6 +154,8 @@ export const dvtProcdocDefinition: ProcdocDefinition = {
     "Patient unable to cooperate",
     "Edema limiting visualization",
     "Overlying dressing or cast",
+    "Prior DVT in the same extremity",
+    "Calf veins not evaluated (protocol limitation)",
     "Technical difficulties",
   ],
   findingsGroups: [

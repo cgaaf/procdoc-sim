@@ -1052,5 +1052,8 @@ function buildDvtInterpretation(state: NoteAssemblerState, interp: string): stri
     if (abnormal.length === 0) return "Positive for DVT";
     return `Positive for DVT \u2013 ${abnormal.join(", ")}`;
   }
+  if (interp === "Indeterminate") {
+    return "Indeterminate \u2013 technically limited study, recommend formal vascular duplex ultrasound";
+  }
   return interp;
 }

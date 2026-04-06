@@ -62,17 +62,17 @@ Comments:  **Lower Extremity Venous Thrombosis Evaluation**
 
 **Findings**
 
-**Common Femoral Vein {Blank single:19197::"Completely compressible","Incompletely compressible","Clot seen within the vein","Not obtained"}**
+**Common Femoral Vein {Blank single:19197::"Completely compressible","Incompletely compressible","Clot seen within the vein","Not obtained","Indeterminate"}**
 
-**Saphenofemoral Junction {Blank single:19197::"Completely compressible","Incompletely compressible","Clot seen within the vein","Not obtained"}**
+**Saphenofemoral Junction {Blank single:19197::"Completely compressible","Incompletely compressible","Clot seen within the vein","Not obtained","Indeterminate"}**
 
-**Popliteal Vein {Blank single:19197::"Completely compressible","Incompletely compressible","Clot seen within the vein","Not obtained"}**
+**Popliteal Vein {Blank single:19197::"Completely compressible","Incompletely compressible","Clot seen within the vein","Not obtained","Indeterminate"}**
 
 **Limitations: None**
 
 **Interpretation:**
 
-**{:19197::"Normal - no clots seen, complete compressibility, no intraluminal echogenic material","Abnormal - non-compressible veins","Abnormal - clot visualized","Indeterminate - technically limited study"}**
+**{:19197::"Negative for DVT","Positive for DVT","Indeterminate"}**
 
 **Additional findings:**
 
