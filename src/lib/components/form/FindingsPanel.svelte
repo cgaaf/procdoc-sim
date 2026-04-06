@@ -92,7 +92,7 @@
       {/each}
     </div>
   {:else if layout === "vertical"}
-    <div class="pl-5">
+    <div class="space-y-4 pl-5">
       {#each items as item, i (i)}
         {@render findingsItem(item)}
       {/each}
