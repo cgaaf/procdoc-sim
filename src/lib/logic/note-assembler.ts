@@ -196,13 +196,29 @@ export function buildEchoLungNote(state: NoteAssemblerState): NoteSpan[] {
   const dateTime = getDateTime(state);
 
   const indication = getMultiOrSingle(state, "echo_indication");
-  const hasCardiac = hasAnySelection(state, ["echo_cardiac_views", "echo_lv", "echo_rv", "echo_pericardium", "echo_ivc"]);
+  const interp = getMultiOrSingle(state, "echo_interp");
+  const hasCardiac = hasAnySelection(state, [
+    "echo_cardiac_views",
+    "echo_cardiac_activity",
+    "echo_lv",
+    "echo_rv",
+    "echo_pericardium",
+    "echo_pericardium_size",
+    "echo_tamponade",
+    "echo_ivc",
+    "echo_wall_motion",
+    "echo_valvular",
+    "echo_epss",
+    "echo_tapse",
+    "echo_mapse",
+  ]);
   const hasLung =
     state.macroGetMulti("echo_lung_left").size > 0 ||
-    state.macroGetMulti("echo_lung_right").size > 0;
+    state.macroGetMulti("echo_lung_right").size > 0 ||
+    hasAnySelection(state, ["echo_lung_sliding_left", "echo_lung_sliding_right"]);
   const hasFindings = hasCardiac || hasLung;
 
-  spans.push({ text: "Ultrasound - Point of Care", bold: true });
+  spans.push({ text: "Ultrasound - Point of Care — Cardiac/Lung", bold: true });
   spans.push({ text: "\n\n" });
   addProviderBlock(state, spans);
 
@@ -235,16 +251,26 @@ export function buildEchoLungNote(state: NoteAssemblerState): NoteSpan[] {
     if (cardiacViews) {
       spans.push({ text: `Views obtained: ${cardiacViews}\n` });
     }
+    addSimpleFindingLine(state, spans, "echo_cardiac_activity", "Cardiac Activity");
     addSimpleFindingLine(state, spans, "echo_lv", "LV Function");
     addSimpleFindingLine(state, spans, "echo_rv", "RV Dilation");
     addSimpleFindingLine(state, spans, "echo_pericardium", "Pericardial Effusion");
+    addSimpleFindingLine(state, spans, "echo_pericardium_size", "Pericardial Effusion Size");
+    addSimpleFindingLine(state, spans, "echo_tamponade", "Tamponade Physiology");
     addSimpleFindingLine(state, spans, "echo_ivc", "IVC");
+    addSimpleFindingLine(state, spans, "echo_wall_motion", "Wall Motion");
+    addSimpleFindingLine(state, spans, "echo_valvular", "Valvular Abnormality");
+    addSimpleFindingLine(state, spans, "echo_epss", "EPSS");
+    addSimpleFindingLine(state, spans, "echo_tapse", "TAPSE");
+    addSimpleFindingLine(state, spans, "echo_mapse", "MAPSE");
   }
 
   if (hasLung) {
     spans.push({ text: "\n" });
     spans.push({ text: "Lung:\n", bold: true });
+    addSimpleFindingLine(state, spans, "echo_lung_sliding_left", "Left lung sliding");
     addMultiFindingLine(state, spans, "echo_lung_left", "Left lung");
+    addSimpleFindingLine(state, spans, "echo_lung_sliding_right", "Right lung sliding");
     addMultiFindingLine(state, spans, "echo_lung_right", "Right lung");
   }
 
@@ -252,6 +278,13 @@ export function buildEchoLungNote(state: NoteAssemblerState): NoteSpan[] {
     spans.push({ text: "\n" });
     spans.push({ text: "Limitations: ", bold: true });
     spans.push({ text: `${state.limitationsText}\n` });
+  }
+
+  // Interpretation
+  if (interp) {
+    spans.push({ text: "\n" });
+    spans.push({ text: "Interpretation: ", bold: true });
+    spans.push({ text: `${interp}\n` });
   }
 
   if (state.additionalFindings) {
