@@ -284,6 +284,20 @@ export const echolungProcdocDefinition: ProcdocDefinition = {
       findings: [
         {
           kind: "buttonGroup",
+          label: "Views Obtained",
+          macroId: "echo_cardiac_views",
+          options: [
+            "Parasternal Long",
+            "Parasternal Short",
+            "Apical 4-Chamber",
+            "Subxiphoid",
+            "IVC",
+          ],
+          multiSelect: true,
+          exclusiveOptions: new Set(),
+        },
+        {
+          kind: "buttonGroup",
           label: "LV Function",
           macroId: "echo_lv",
           options: ["Normal", "Reduced", "Severely reduced", "Indeterminate"],

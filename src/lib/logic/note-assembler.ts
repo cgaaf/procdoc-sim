@@ -196,7 +196,7 @@ export function buildEchoLungNote(state: NoteAssemblerState): NoteSpan[] {
   const dateTime = getDateTime(state);
 
   const indication = getMultiOrSingle(state, "echo_indication");
-  const hasCardiac = hasAnySelection(state, ["echo_lv", "echo_rv", "echo_pericardium", "echo_ivc"]);
+  const hasCardiac = hasAnySelection(state, ["echo_cardiac_views", "echo_lv", "echo_rv", "echo_pericardium", "echo_ivc"]);
   const hasLung =
     state.macroGetMulti("echo_lung_left").size > 0 ||
     state.macroGetMulti("echo_lung_right").size > 0;
@@ -231,6 +231,10 @@ export function buildEchoLungNote(state: NoteAssemblerState): NoteSpan[] {
   if (hasCardiac) {
     spans.push({ text: "\n" });
     spans.push({ text: "Cardiac:\n", bold: true });
+    const cardiacViews = getMultiOrSingle(state, "echo_cardiac_views");
+    if (cardiacViews) {
+      spans.push({ text: `Views obtained: ${cardiacViews}\n` });
+    }
     addSimpleFindingLine(state, spans, "echo_lv", "LV Function");
     addSimpleFindingLine(state, spans, "echo_rv", "RV Dilation");
     addSimpleFindingLine(state, spans, "echo_pericardium", "Pericardial Effusion");
@@ -457,6 +461,7 @@ function getMultiOrSingle(state: NoteAssemblerState, macroId: string): string | 
 function hasAnySelection(state: NoteAssemblerState, macroIds: string[]): boolean {
   for (const id of macroIds) {
     if (state.macroGet(id) != null) return true;
+    if (state.macroGetMulti(id).size > 0) return true;
     if (state.getComment(id) !== "") return true;
   }
   return false;
