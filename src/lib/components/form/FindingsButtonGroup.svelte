@@ -62,7 +62,7 @@
       {group.label}
     </div>
   {/if}
-  <div class="flex flex-wrap items-center gap-1.5">
+  <div class="flex flex-wrap items-center gap-1">
     {#each group.options as option (option)}
       {@const isSelected = selectedSet.has(option)}
       <button
