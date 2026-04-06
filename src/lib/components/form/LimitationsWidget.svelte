@@ -24,8 +24,6 @@
     ];
   });
 
-  let topRow = $derived(allButtons.slice(0, Math.ceil(allButtons.length / 2)));
-  let bottomRow = $derived(allButtons.slice(Math.ceil(allButtons.length / 2)));
 
   function handleNoneTap() {
     for (const opt of [...state.selectedLimitations]) {
@@ -91,13 +89,8 @@
   >
     Limitations:
   </p>
-  <div class="mt-1 flex gap-1">
-    {#each topRow as btn (btn.label)}
-      {@render limitButton(btn)}
-    {/each}
-  </div>
-  <div class="mt-1 flex gap-1">
-    {#each bottomRow as btn (btn.label)}
+  <div class="mt-1 flex flex-wrap gap-1">
+    {#each allButtons as btn (btn.label)}
       {@render limitButton(btn)}
     {/each}
   </div>
