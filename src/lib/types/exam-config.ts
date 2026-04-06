@@ -34,4 +34,10 @@ export type InterpretationConfig =
       macroId: string;
       options: string[];
     }
+  | {
+      kind: "buttonsMulti";
+      macroId: string;
+      options: string[];
+      exclusiveOptions: Set<string>;
+    }
   | { kind: "none" };

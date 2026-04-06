@@ -131,6 +131,41 @@
             </button>
           {/each}
         </div>
+      {:else if interpretation.kind === "buttonsMulti"}
+        {@const selected = state.macroSelections.getMulti(interpretation.macroId)}
+        <div class="flex flex-wrap gap-1">
+          {#each interpretation.options as option (option)}
+            {@const isSelected = selected.has(option)}
+            <button
+              class="rounded-[3px] border px-2.5 py-[5px] font-epic text-[12px] transition-colors"
+              style:background-color={isSelected
+                ? "var(--color-btn-selected-bg)"
+                : "var(--color-btn-default-bg)"}
+              style:border-color={isSelected
+                ? "var(--color-btn-selected-border)"
+                : "var(--color-btn-default-border)"}
+              style:color={isSelected
+                ? "var(--color-btn-selected-text)"
+                : "var(--color-text-primary)"}
+              onclick={() => {
+                const next = new Set(selected);
+                const isExclusive = interpretation.exclusiveOptions.has(option);
+                if (isSelected) {
+                  next.delete(option);
+                } else if (isExclusive) {
+                  next.clear();
+                  next.add(option);
+                } else {
+                  for (const ex of interpretation.exclusiveOptions) next.delete(ex);
+                  next.add(option);
+                }
+                state.setMultiMacroSelection(interpretation.macroId, next);
+              }}
+            >
+              {option}
+            </button>
+          {/each}
+        </div>
       {:else if interpretation.kind === "fast"}
         {@const currentValue = state.macroSelections.get("macro_8")}
         <div class="flex gap-1">

@@ -7,6 +7,7 @@
   } from "$lib/types/procdoc-definition";
   import type { InterpretationConfig } from "$lib/types/exam-config";
   import { SvelteSet } from "svelte/reactivity";
+  import { getExamState } from "$lib/state/context";
   import FindingToggleButton from "./FindingToggleButton.svelte";
   import FindingsButtonGroup from "./FindingsButtonGroup.svelte";
   import RepeatProcedureWidget from "./RepeatProcedureWidget.svelte";
@@ -26,7 +27,11 @@
     interpretation?: InterpretationConfig;
   } = $props();
 
-  let collapsed = new SvelteSet<string>();
+  const appState = getExamState();
+
+  let collapsed = new SvelteSet<string>(
+    findingsGroups.filter((g) => g.defaultCollapsed).map((g) => g.header),
+  );
 
   function toggleCollapse(header: string) {
     if (collapsed.has(header)) {
@@ -34,6 +39,13 @@
     } else {
       collapsed.add(header);
     }
+  }
+
+  function isItemVisible(item: FindingsItem): boolean {
+    if (item.kind !== "findingRow" && item.kind !== "buttonGroup") return true;
+    const cond = item.visibleWhen;
+    if (!cond) return true;
+    return appState.macroSelections.get(cond.macroId) === cond.value;
   }
 
   function hasSubHeaders(items: FindingsItem[]): boolean {
@@ -66,10 +78,12 @@
 </script>
 
 {#snippet findingsItem(item: FindingsItem)}
-  {#if item.kind === "findingRow"}
-    <FindingToggleButton finding={item} />
-  {:else if item.kind === "buttonGroup"}
-    <FindingsButtonGroup group={item} />
+  {#if isItemVisible(item)}
+    {#if item.kind === "findingRow"}
+      <FindingToggleButton finding={item} />
+    {:else if item.kind === "buttonGroup"}
+      <FindingsButtonGroup group={item} />
+    {/if}
   {/if}
 {/snippet}
 

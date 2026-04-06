@@ -30,6 +30,8 @@ export interface FindingsGroupSection {
   findings: FindingsItem[];
   /** When 'vertical', render findings in a single column instead of the default two-column split */
   layout?: "vertical" | "columns";
+  /** Start this section collapsed */
+  defaultCollapsed?: boolean;
 }
 
 // --- Findings item discriminated union ---
@@ -45,6 +47,12 @@ export interface FindingsSubHeader {
   title: string;
 }
 
+/** Condition controlling whether a findings item is visible based on another macro's value */
+export interface VisibilityCondition {
+  macroId: string;
+  value: string;
+}
+
 export interface FindingRow {
   kind: "findingRow";
   label: string;
@@ -57,6 +65,8 @@ export interface FindingRow {
   triState?: boolean;
   /** Custom display labels for triState buttons (stored values stay unchanged) */
   triStateLabels?: { present: string; absent: string; indeterminate: string };
+  /** Only show this item when the referenced macro has the specified value */
+  visibleWhen?: VisibilityCondition;
 }
 
 export interface FindingsButtonGroupDef {
@@ -67,6 +77,8 @@ export interface FindingsButtonGroupDef {
   multiSelect: boolean;
   exclusiveOptions: Set<string>;
   commentable?: boolean;
+  /** Only show this item when the referenced macro has the specified value */
+  visibleWhen?: VisibilityCondition;
 }
 
 export interface RadioFindingSubsection {
