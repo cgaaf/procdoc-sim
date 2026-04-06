@@ -300,7 +300,7 @@ export const echolungProcdocDefinition: ProcdocDefinition = {
           kind: "buttonGroup",
           label: "LV Function",
           macroId: "echo_lv",
-          options: ["Normal", "Reduced", "Severely reduced", "Indeterminate"],
+          options: ["Normal", "Hyperdynamic", "Reduced", "Severely reduced", "Indeterminate"],
           multiSelect: false,
           exclusiveOptions: new Set(),
           commentable: true,
