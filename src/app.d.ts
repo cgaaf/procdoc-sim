@@ -6,7 +6,15 @@ declare global {
     // interface Locals {}
     // interface PageData {}
     // interface PageState {}
-    // interface Platform {}
+    interface Platform {
+      env?: {
+        [key: string]: unknown;
+      };
+      context?: {
+        waitUntil(promise: Promise<unknown>): void;
+      };
+      caches?: CacheStorage & { default: Cache };
+    }
   }
 }
 
