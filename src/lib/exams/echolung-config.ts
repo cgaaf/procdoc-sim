@@ -47,6 +47,73 @@ export const echolungConfig: ExamConfig = {
       "Indeterminate",
     ]),
   },
-  presets: [],
+  presets: [
+    {
+      label: "Normal Cardiac",
+      apply: (state) => {
+        state.macroSelections.setIfEmpty("echo_cardiac_activity", "Present");
+        state.macroSelections.setIfEmpty("echo_lv", "Normal");
+        state.macroSelections.setIfEmpty("echo_rv", "Normal");
+        state.macroSelections.setIfEmpty("echo_pericardium", "Absent");
+        state.macroSelections.setIfEmpty("echo_ivc", "Normal");
+        state.macroSelections.setMultiIfEmpty(
+          "echo_cardiac_views",
+          new Set(["Parasternal Long", "Apical 4-Chamber", "Subxiphoid", "IVC"]),
+        );
+      },
+    },
+    {
+      label: "Normal Lung",
+      apply: (state) => {
+        state.macroSelections.setIfEmpty("echo_lung_sliding_left", "Present");
+        state.macroSelections.setMultiIfEmpty("echo_lung_left", new Set(["A-lines (normal)"]));
+        state.macroSelections.setIfEmpty("echo_lung_sliding_right", "Present");
+        state.macroSelections.setMultiIfEmpty("echo_lung_right", new Set(["A-lines (normal)"]));
+      },
+    },
+    {
+      label: "Normal Cardiac & Lung",
+      apply: (state) => {
+        state.macroSelections.setIfEmpty("echo_cardiac_activity", "Present");
+        state.macroSelections.setIfEmpty("echo_lv", "Normal");
+        state.macroSelections.setIfEmpty("echo_rv", "Normal");
+        state.macroSelections.setIfEmpty("echo_pericardium", "Absent");
+        state.macroSelections.setIfEmpty("echo_ivc", "Normal");
+        state.macroSelections.setMultiIfEmpty(
+          "echo_cardiac_views",
+          new Set(["Parasternal Long", "Apical 4-Chamber", "Subxiphoid", "IVC"]),
+        );
+        state.macroSelections.setIfEmpty("echo_lung_sliding_left", "Present");
+        state.macroSelections.setMultiIfEmpty("echo_lung_left", new Set(["A-lines (normal)"]));
+        state.macroSelections.setIfEmpty("echo_lung_sliding_right", "Present");
+        state.macroSelections.setMultiIfEmpty("echo_lung_right", new Set(["A-lines (normal)"]));
+        state.macroSelections.setMultiIfEmpty(
+          "echo_interp",
+          new Set(["Normal cardiac and lung exam"]),
+        );
+      },
+    },
+    {
+      label: "Pulmonary Edema",
+      apply: (state) => {
+        state.macroSelections.setMultiIfEmpty("echo_lung_left", new Set(["B-lines (≥3 per field)"]));
+        state.macroSelections.setMultiIfEmpty(
+          "echo_lung_right",
+          new Set(["B-lines (≥3 per field)"]),
+        );
+        state.macroSelections.setMultiIfEmpty("echo_interp", new Set(["Pulmonary edema"]));
+      },
+    },
+    {
+      label: "Reduced LV",
+      apply: (state) => {
+        state.macroSelections.setIfEmpty("echo_lv", "Reduced");
+        state.macroSelections.setMultiIfEmpty(
+          "echo_interp",
+          new Set(["Reduced LV systolic function"]),
+        );
+      },
+    },
+  ],
   onMacroChange,
 };
