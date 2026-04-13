@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { InterpretationConfig } from "$lib/types/exam-config";
   import { getExamState } from "$lib/state/context";
+  import FindingCommentModal from "./FindingCommentModal.svelte";
 
   let {
     options,
@@ -10,24 +11,36 @@
     interpretation: InterpretationConfig;
   } = $props();
 
-  const state = getExamState();
+  const appState = getExamState();
 
-  let noneSelected = $derived(state.selectedLimitations.size === 0);
+  let noneSelected = $derived(appState.selectedLimitations.size === 0);
+
+  let interpCommentOpen = $state(false);
+  let interpMacroId = $derived.by(() => {
+    if (interpretation.kind === "buttons" || interpretation.kind === "buttonsMulti") {
+      return interpretation.macroId;
+    }
+    if (interpretation.kind === "fast") return "macro_8";
+    return null;
+  });
+  let hasInterpComment = $derived(
+    interpMacroId != null ? appState.getComment(interpMacroId) !== "" : false,
+  );
 
   const allButtons = $derived.by(() => {
     return [
       { label: "None", isSelected: noneSelected },
       ...options.map((opt) => ({
         label: opt,
-        isSelected: state.selectedLimitations.has(opt),
+        isSelected: appState.selectedLimitations.has(opt),
       })),
     ];
   });
 
 
   function handleNoneTap() {
-    for (const opt of [...state.selectedLimitations]) {
-      state.toggleLimitation(opt);
+    for (const opt of [...appState.selectedLimitations]) {
+      appState.toggleLimitation(opt);
     }
   }
 
@@ -35,7 +48,7 @@
     if (label === "None") {
       handleNoneTap();
     } else {
-      state.toggleLimitation(label);
+      appState.toggleLimitation(label);
     }
   }
 
@@ -48,20 +61,57 @@
 
   function handleFastInterpTap(option: string) {
     if (interpretation.kind !== "fast") return;
-    const currentValue = state.macroSelections.get("macro_8");
+    const currentValue = appState.macroSelections.get("macro_8");
     if (option === "FAST Negative x 4") {
-      interpretation.applyNegativeFAST4(state);
+      interpretation.applyNegativeFAST4(appState);
     } else if (option === "E-FAST Negative x 5") {
-      interpretation.applyNegativeEFAST5(state);
+      interpretation.applyNegativeEFAST5(appState);
     } else {
       if (currentValue === option) {
-        state.setMacroSelection("macro_8", null);
+        appState.setMacroSelection("macro_8", null);
       } else {
-        state.setMacroSelection("macro_8", option);
+        appState.setMacroSelection("macro_8", option);
       }
     }
   }
 </script>
+
+{#snippet interpCommentIcon()}
+  <button
+    class="flex h-[24px] w-[24px] shrink-0 items-center justify-center"
+    onclick={() => (interpCommentOpen = true)}
+    title="Add free text"
+    aria-label="Add free text interpretation"
+  >
+    {#if hasInterpComment}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#616161"
+        stroke-width="1.5"
+        class="h-[18px] w-[18px]"
+      >
+        <path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" />
+        <polyline points="14 2 14 8 20 8" />
+        <line x1="8" y1="13" x2="16" y2="13" />
+        <line x1="8" y1="17" x2="16" y2="17" />
+      </svg>
+    {:else}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#bdbdbd"
+        stroke-width="1.5"
+        class="h-[18px] w-[18px]"
+      >
+        <path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" />
+        <polyline points="14 2 14 8 20 8" />
+      </svg>
+    {/if}
+  </button>
+{/snippet}
 
 {#snippet limitButton(btn: { label: string; isSelected: boolean })}
   <button
@@ -104,8 +154,8 @@
     </p>
     <div class="mt-1">
       {#if interpretation.kind === "buttons"}
-        {@const currentValue = state.macroSelections.get(interpretation.macroId)}
-        <div class="flex flex-wrap gap-1">
+        {@const currentValue = appState.macroSelections.get(interpretation.macroId)}
+        <div class="flex flex-wrap items-center gap-1">
           {#each interpretation.options as option (option)}
             {@const isSelected = currentValue === option}
             <button
@@ -121,19 +171,20 @@
                 : "var(--color-text-primary)"}
               onclick={() => {
                 if (currentValue === option) {
-                  state.setMacroSelection(interpretation.macroId, null);
+                  appState.setMacroSelection(interpretation.macroId, null);
                 } else {
-                  state.setMacroSelection(interpretation.macroId, option);
+                  appState.setMacroSelection(interpretation.macroId, option);
                 }
               }}
             >
               {option}
             </button>
           {/each}
+          {@render interpCommentIcon()}
         </div>
       {:else if interpretation.kind === "buttonsMulti"}
-        {@const selected = state.macroSelections.getMulti(interpretation.macroId)}
-        <div class="flex flex-wrap gap-1">
+        {@const selected = appState.macroSelections.getMulti(interpretation.macroId)}
+        <div class="flex flex-wrap items-center gap-1">
           {#each interpretation.options as option (option)}
             {@const isSelected = selected.has(option)}
             <button
@@ -159,16 +210,17 @@
                   for (const ex of interpretation.exclusiveOptions) next.delete(ex);
                   next.add(option);
                 }
-                state.setMultiMacroSelection(interpretation.macroId, next);
+                appState.setMultiMacroSelection(interpretation.macroId, next);
               }}
             >
               {option}
             </button>
           {/each}
+          {@render interpCommentIcon()}
         </div>
       {:else if interpretation.kind === "fast"}
-        {@const currentValue = state.macroSelections.get("macro_8")}
-        <div class="flex gap-1">
+        {@const currentValue = appState.macroSelections.get("macro_8")}
+        <div class="flex flex-wrap items-center gap-1">
           {#each fastInterpretationOptions as option (option)}
             {@const isSelected = currentValue === option}
             <button
@@ -188,6 +240,7 @@
               {option}
             </button>
           {/each}
+          {@render interpCommentIcon()}
         </div>
       {/if}
     </div>
@@ -205,6 +258,14 @@
     style:border-color="var(--color-input-border)"
     style:color="var(--color-text-primary)"
     rows="2"
-    bind:value={state.additionalFindings}
+    bind:value={appState.additionalFindings}
   ></textarea>
 </div>
+
+{#if interpCommentOpen && interpMacroId != null}
+  <FindingCommentModal
+    label="Interpretation"
+    macroId={interpMacroId}
+    onclose={() => (interpCommentOpen = false)}
+  />
+{/if}

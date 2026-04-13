@@ -30,6 +30,7 @@ export function buildFastNote(state: NoteAssemblerState): NoteSpan[] {
   const hasAnyFindings = hasCardiac || hasAbdominal || hasLungs;
   const indication = getIndication(state);
   const interp = state.macroGet("macro_8");
+  const interpComment = state.getComment("macro_8");
   const dateTime = getDateTime(state);
 
   // Title
@@ -140,10 +141,13 @@ export function buildFastNote(state: NoteAssemblerState): NoteSpan[] {
   }
 
   // Interpretation
-  if (interp) {
+  if (interp || interpComment) {
     spans.push({ text: "\n" });
     spans.push({ text: "Interpretation: ", bold: true });
-    spans.push({ text: `${buildInterpretation(state, interp)}\n` });
+    const parts: string[] = [];
+    if (interp) parts.push(buildInterpretation(state, interp));
+    if (interpComment) parts.push(interpComment);
+    spans.push({ text: `${parts.join(". ")}\n` });
   }
 
   // Additional findings
@@ -197,6 +201,7 @@ export function buildEchoLungNote(state: NoteAssemblerState): NoteSpan[] {
 
   const indication = getMultiOrSingle(state, "echo_indication");
   const interp = getMultiOrSingle(state, "echo_interp");
+  const interpComment = state.getComment("echo_interp");
   const hasCardiac = hasAnySelection(state, [
     "echo_cardiac_views",
     "echo_cardiac_activity",
@@ -281,10 +286,13 @@ export function buildEchoLungNote(state: NoteAssemblerState): NoteSpan[] {
   }
 
   // Interpretation
-  if (interp) {
+  if (interp || interpComment) {
     spans.push({ text: "\n" });
     spans.push({ text: "Interpretation: ", bold: true });
-    spans.push({ text: `${interp}\n` });
+    const parts: string[] = [];
+    if (interp) parts.push(interp);
+    if (interpComment) parts.push(interpComment);
+    spans.push({ text: `${parts.join(". ")}\n` });
   }
 
   if (state.additionalFindings) {
@@ -308,6 +316,8 @@ export function buildSoftTissueNote(state: NoteAssemblerState): NoteSpan[] {
   const dateTime = getDateTime(state);
 
   const indication = getMultiOrSingle(state, "st_indication");
+  const interp = state.macroGet("st_interp");
+  const interpComment = state.getComment("st_interp");
   const hasFindings = hasAnySelection(state, [
     "st_collection",
     "st_foreign_body",
@@ -343,6 +353,15 @@ export function buildSoftTissueNote(state: NoteAssemblerState): NoteSpan[] {
     spans.push({ text: `${state.limitationsText}\n` });
   }
 
+  if (interp || interpComment) {
+    spans.push({ text: "\n" });
+    spans.push({ text: "Interpretation: ", bold: true });
+    const parts: string[] = [];
+    if (interp) parts.push(interp);
+    if (interpComment) parts.push(interpComment);
+    spans.push({ text: `${parts.join(". ")}\n` });
+  }
+
   if (state.additionalFindings) {
     spans.push({ text: "\n" });
     spans.push({ text: "Additional findings: ", bold: true });
@@ -364,6 +383,8 @@ export function buildGallbladderNote(state: NoteAssemblerState): NoteSpan[] {
   const dateTime = getDateTime(state);
 
   const indication = getMultiOrSingle(state, "gb_indication");
+  const interp = state.macroGet("gb_interp");
+  const interpComment = state.getComment("gb_interp");
   const hasFindings = hasAnySelection(state, [
     "gb_stones",
     "gb_wall",
@@ -404,6 +425,15 @@ export function buildGallbladderNote(state: NoteAssemblerState): NoteSpan[] {
     spans.push({ text: `${state.limitationsText}\n` });
   }
 
+  if (interp || interpComment) {
+    spans.push({ text: "\n" });
+    spans.push({ text: "Interpretation: ", bold: true });
+    const parts: string[] = [];
+    if (interp) parts.push(interp);
+    if (interpComment) parts.push(interpComment);
+    spans.push({ text: `${parts.join(". ")}\n` });
+  }
+
   if (state.additionalFindings) {
     spans.push({ text: "\n" });
     spans.push({ text: "Additional findings: ", bold: true });
@@ -425,6 +455,8 @@ export function buildObstetricNote(state: NoteAssemblerState): NoteSpan[] {
   const dateTime = getDateTime(state);
 
   const indication = getMultiOrSingle(state, "ob_indication");
+  const interp = state.macroGet("ob_interp");
+  const interpComment = state.getComment("ob_interp");
   const hasUterus = hasAnySelection(state, ["ob_iup", "ob_fhr", "ob_number"]);
   const hasPelvis = hasAnySelection(state, ["ob_free_fluid", "ob_adnexal"]);
   const hasFindings = hasUterus || hasPelvis;
@@ -467,6 +499,15 @@ export function buildObstetricNote(state: NoteAssemblerState): NoteSpan[] {
     spans.push({ text: "\n" });
     spans.push({ text: "Limitations: ", bold: true });
     spans.push({ text: `${state.limitationsText}\n` });
+  }
+
+  if (interp || interpComment) {
+    spans.push({ text: "\n" });
+    spans.push({ text: "Interpretation: ", bold: true });
+    const parts: string[] = [];
+    if (interp) parts.push(interp);
+    if (interpComment) parts.push(interpComment);
+    spans.push({ text: `${parts.join(". ")}\n` });
   }
 
   if (state.additionalFindings) {
@@ -595,6 +636,7 @@ export function buildDvtNote(state: NoteAssemblerState): NoteSpan[] {
   const indication = getDvtIndication(state);
   const side = getDvtDerivedSide(state);
   const interp = state.macroGet("dvt_interp");
+  const interpComment = state.getComment("dvt_interp");
   const dateTime = getDateTime(state);
 
   // Title
@@ -683,10 +725,13 @@ export function buildDvtNote(state: NoteAssemblerState): NoteSpan[] {
   }
 
   // Interpretation
-  if (interp) {
+  if (interp || interpComment) {
     spans.push({ text: "\n" });
     spans.push({ text: "Interpretation: ", bold: true });
-    spans.push({ text: `${buildDvtInterpretation(state, interp)}\n` });
+    const parts: string[] = [];
+    if (interp) parts.push(buildDvtInterpretation(state, interp));
+    if (interpComment) parts.push(interpComment);
+    spans.push({ text: `${parts.join(". ")}\n` });
   }
 
   // Additional findings

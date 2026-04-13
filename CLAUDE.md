@@ -43,3 +43,7 @@ The **FAST exam** (`fastProcdocDefinition`) is the canonical reference for layou
 
 - **Button unselected state**: All toggle/selection buttons must use `--color-btn-default-bg` and `--color-btn-default-border` for their unselected state. Do NOT use `--color-finding-null-bg` / `--color-finding-null-border` for button backgrounds — those are reserved for the inner label area of +/label/- finding toggles.
 - **Refer to `layout.css`** for the full set of color tokens before adding inline colors.
+
+## Svelte 5 Gotchas
+
+- **Never name a local variable `state`** in a component that also uses the `$state` rune. Svelte interprets `$state` as a store subscription on the local `state` binding, silently breaking reactivity (`$state(false)` becomes a store read, not a rune). Use `appState` for `getExamState()` — matches the convention in `FindingsButtonGroup.svelte` / `FindingCommentModal.svelte`.
