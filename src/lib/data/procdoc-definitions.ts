@@ -446,6 +446,19 @@ export const echolungProcdocDefinition: ProcdocDefinition = {
       layout: "vertical",
       findings: [
         {
+          kind: "buttonGroup",
+          label: "Left Zones Imaged",
+          macroId: "echo_lung_zones_left",
+          options: [
+            "Upper anterior (zone 1)",
+            "Lower anterior (zone 2)",
+            "Upper lateral (zone 3)",
+            "Lower lateral (zone 4)",
+          ],
+          multiSelect: true,
+          exclusiveOptions: new Set(),
+        },
+        {
           kind: "findingRow",
           label: "Left Lung Sliding",
           findingLabel: "Lung sliding",
@@ -471,6 +484,19 @@ export const echolungProcdocDefinition: ProcdocDefinition = {
           commentable: true,
         },
         {
+          kind: "buttonGroup",
+          label: "Right Zones Imaged",
+          macroId: "echo_lung_zones_right",
+          options: [
+            "Upper anterior (zone 1)",
+            "Lower anterior (zone 2)",
+            "Upper lateral (zone 3)",
+            "Lower lateral (zone 4)",
+          ],
+          multiSelect: true,
+          exclusiveOptions: new Set(),
+        },
+        {
           kind: "findingRow",
           label: "Right Lung Sliding",
           findingLabel: "Lung sliding",
@@ -493,6 +519,19 @@ export const echolungProcdocDefinition: ProcdocDefinition = {
           ],
           multiSelect: true,
           exclusiveOptions: new Set(["A-lines (normal)", "Indeterminate"]),
+          commentable: true,
+        },
+        {
+          kind: "buttonGroup",
+          label: "B-lines Pattern",
+          macroId: "echo_lung_blines_pattern",
+          options: [
+            "Diffuse B-lines (suggestive of pulmonary edema / cardiogenic)",
+            "Focal B-lines (suggestive of pneumonia / contusion)",
+            "No B-lines",
+          ],
+          multiSelect: false,
+          exclusiveOptions: new Set(),
           commentable: true,
         },
       ],

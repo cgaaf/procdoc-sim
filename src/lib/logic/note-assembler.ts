@@ -202,7 +202,13 @@ export function buildEchoLungNote(state: NoteAssemblerState): NoteSpan[] {
   const hasLung =
     state.macroGetMulti("echo_lung_left").size > 0 ||
     state.macroGetMulti("echo_lung_right").size > 0 ||
-    hasAnySelection(state, ["echo_lung_sliding_left", "echo_lung_sliding_right"]);
+    state.macroGetMulti("echo_lung_zones_left").size > 0 ||
+    state.macroGetMulti("echo_lung_zones_right").size > 0 ||
+    hasAnySelection(state, [
+      "echo_lung_sliding_left",
+      "echo_lung_sliding_right",
+      "echo_lung_blines_pattern",
+    ]);
   const hasFindings = hasCardiac || hasLung;
 
   spans.push({ text: "Ultrasound - Point of Care — Cardiac/Lung", bold: true });
@@ -254,10 +260,13 @@ export function buildEchoLungNote(state: NoteAssemblerState): NoteSpan[] {
   if (hasLung) {
     spans.push({ text: "\n" });
     spans.push({ text: "Lung:\n", bold: true });
+    addZonesImagedLine(state, spans, "echo_lung_zones_left", "Left lung");
     addSimpleFindingLine(state, spans, "echo_lung_sliding_left", "Left lung sliding");
     addMultiFindingLine(state, spans, "echo_lung_left", "Left lung");
+    addZonesImagedLine(state, spans, "echo_lung_zones_right", "Right lung");
     addSimpleFindingLine(state, spans, "echo_lung_sliding_right", "Right lung sliding");
     addMultiFindingLine(state, spans, "echo_lung_right", "Right lung");
+    addSimpleFindingLine(state, spans, "echo_lung_blines_pattern", "B-lines pattern");
   }
 
   if (hasFindings) {
@@ -558,6 +567,17 @@ function addSimpleFindingLine(
     return;
   }
   spans.push({ text: `${label}: ${value}${suffix}\n` });
+}
+
+function addZonesImagedLine(
+  state: NoteAssemblerState,
+  spans: NoteSpan[],
+  macroId: string,
+  label: string,
+) {
+  const zones = state.macroGetMulti(macroId);
+  if (zones.size === 0) return;
+  spans.push({ text: `${label}: imaged ${[...zones].join(", ")}\n` });
 }
 
 function addMultiFindingLine(
