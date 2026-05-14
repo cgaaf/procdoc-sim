@@ -104,10 +104,10 @@
           [positiveValue, labels.present],
           [indeterminateValue, labels.indeterminate],
         ]}
-    <div class="flex w-[340px] gap-[3px]">
+    <div class="flex gap-[3px]">
       {#each buttons as [value, label] (value)}
         <button
-          class="h-[30px] flex-1 rounded-[3px] border font-epic text-[11px] transition-colors"
+          class="h-[30px] whitespace-nowrap rounded-[3px] border px-2.5 font-epic text-[11px] transition-colors"
           style:background-color={selected === value
             ? "var(--color-btn-selected-bg)"
             : "var(--color-btn-default-bg)"}
