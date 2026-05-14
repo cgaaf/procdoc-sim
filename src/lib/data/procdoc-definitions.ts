@@ -632,9 +632,12 @@ export const softTissueProcdocDefinition: ProcdocDefinition = {
 
 export const gallbladderProcdocDefinition: ProcdocDefinition = {
   findingsHelperText:
-    "RUQ view with curvilinear probe. Evaluate gallbladder for stones, " +
-    "wall thickening (>3 mm), pericholecystic fluid, and sonographic " +
-    "Murphy's sign. Measure CBD if visualized (normal <6 mm).",
+    "RUQ evaluation. Curvilinear probe is preferred; phased array may be " +
+    "substituted for improved maneuverability between ribs. Evaluate " +
+    "gallbladder for stones, wall thickening (>3 mm), pericholecystic " +
+    "fluid, and sonographic Murphy's sign. Measure CBD if visualized — " +
+    "normal <6 mm, with an age-adjusted threshold of +1 mm per decade " +
+    "after age 60.",
   sections: [],
   limitationOptions: [
     ...STANDARD_LIMITATIONS,
@@ -673,7 +676,7 @@ export const gallbladderProcdocDefinition: ProcdocDefinition = {
           kind: "buttonGroup",
           label: "Gallstones",
           macroId: "gb_stones",
-          options: ["No stones", "Present", "Sludge only", "Indeterminate"],
+          options: ["No stones", "Present", "Sludge only", "Stones and sludge", "Indeterminate"],
           multiSelect: false,
           exclusiveOptions: new Set(),
           commentable: true,
