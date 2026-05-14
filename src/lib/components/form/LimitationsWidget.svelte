@@ -54,6 +54,7 @@
 
   // FAST interpretation
   const fastInterpretationOptions = [
+    "FAST Negative x 3",
     "FAST Negative x 4",
     "E-FAST Negative x 5",
     "Positive FAST",

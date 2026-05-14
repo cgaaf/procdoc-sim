@@ -873,6 +873,11 @@ function addCardiacFindingLine(
     return;
   }
 
+  if (value === "Not obtained") {
+    spans.push({ text: `${viewLabel} view not obtained${suffix}\n` });
+    return;
+  }
+
   let desc: string;
   if (value === "Positive") {
     desc = "positive for pericardial effusion";
@@ -900,6 +905,11 @@ function addAbdominalFindingLine(
 
   if (value == null) {
     spans.push({ text: `${viewLabel} view${suffix}\n` });
+    return;
+  }
+
+  if (value === "Not obtained") {
+    spans.push({ text: `${viewLabel} view not obtained${suffix}\n` });
     return;
   }
 
@@ -960,6 +970,11 @@ function buildInterpretation(state: NoteAssemblerState, interp: string): string 
       );
     case "FAST Negative x 4":
       return "FAST Negative x 4 \u2013 no pericardial effusion, " + "no intraperitoneal free fluid";
+    case "FAST Negative x 3":
+      return (
+        "FAST Negative x 3 \u2013 no intraperitoneal free fluid " +
+        "(cardiac view not obtained)"
+      );
     case "Positive FAST":
       return buildPositiveInterpretation(state);
     case "Indeterminate FAST":
@@ -1006,20 +1021,20 @@ function buildPositiveInterpretation(state: NoteAssemblerState): string {
   const left = state.macroGetMulti("macro_7_left");
   const right = state.macroGetMulti("macro_7_right");
 
-  const ptxSides: string[] = [];
-  if (left.has("Pneumothorax")) ptxSides.push("left");
-  if (right.has("Pneumothorax")) ptxSides.push("right");
-  if (ptxSides.length > 0) {
-    const side = ptxSides.length === 2 ? "bilateral" : ptxSides[0];
-    findings.push(`${side} pneumothorax`);
+  const negSlidingSides: string[] = [];
+  if (left.has("Negative lung sliding")) negSlidingSides.push("left");
+  if (right.has("Negative lung sliding")) negSlidingSides.push("right");
+  if (negSlidingSides.length > 0) {
+    const side = negSlidingSides.length === 2 ? "bilateral" : negSlidingSides[0];
+    findings.push(`${side} negative lung sliding`);
   }
 
-  const htxSides: string[] = [];
-  if (left.has("Hemothorax")) htxSides.push("left");
-  if (right.has("Hemothorax")) htxSides.push("right");
-  if (htxSides.length > 0) {
-    const side = htxSides.length === 2 ? "bilateral" : htxSides[0];
-    findings.push(`${side} hemothorax`);
+  const effusionSides: string[] = [];
+  if (left.has("Pleural effusion")) effusionSides.push("left");
+  if (right.has("Pleural effusion")) effusionSides.push("right");
+  if (effusionSides.length > 0) {
+    const side = effusionSides.length === 2 ? "bilateral" : effusionSides[0];
+    findings.push(`${side} pleural effusion`);
   }
 
   if (findings.length === 0) return "Positive";

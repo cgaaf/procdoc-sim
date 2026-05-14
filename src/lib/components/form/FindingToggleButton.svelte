@@ -79,13 +79,16 @@
   </div>
   <div class="w-1"></div>
   {#if finding.triState}
-    <!-- triState: 3 equal-width buttons -->
+    <!-- triState: 3 (or 4 with naOption) equal-width buttons -->
     {@const positiveValue = finding.presentOptions[0]}
     {@const negativeValue = finding.absentOption}
     {@const indeterminateValue = "Indeterminate"}
     {@const labels = finding.triStateLabels ?? { present: "Positive", absent: "Negative", indeterminate: "Indeterminate" }}
+    {@const buttons = finding.naOption
+      ? [[negativeValue, labels.absent], [positiveValue, labels.present], [indeterminateValue, labels.indeterminate], [finding.naOption, finding.naOption]]
+      : [[negativeValue, labels.absent], [positiveValue, labels.present], [indeterminateValue, labels.indeterminate]]}
     <div class="flex w-[340px] gap-[3px]">
-      {#each [[negativeValue, labels.absent], [positiveValue, labels.present], [indeterminateValue, labels.indeterminate]] as [value, label] (value)}
+      {#each buttons as [value, label] (value)}
         <button
           class="h-[30px] flex-1 rounded-[3px] border font-epic text-[11px] transition-colors"
           style:background-color={selected === value

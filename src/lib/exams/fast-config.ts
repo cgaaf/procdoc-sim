@@ -20,10 +20,10 @@ function hasAnyPositiveFinding(state: ExamState): boolean {
   const left = state.macroSelections.getMulti("macro_7_left");
   const right = state.macroSelections.getMulti("macro_7_right");
   if (
-    left.has("Pneumothorax") ||
-    left.has("Hemothorax") ||
-    right.has("Pneumothorax") ||
-    right.has("Hemothorax")
+    left.has("Negative lung sliding") ||
+    left.has("Pleural effusion") ||
+    right.has("Negative lung sliding") ||
+    right.has("Pleural effusion")
   ) {
     return true;
   }
