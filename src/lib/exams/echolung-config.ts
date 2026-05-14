@@ -23,6 +23,8 @@ export const echolungConfig: ExamConfig = {
   templateParts: [],
   buildNote: buildEchoLungNote,
   showRepeatProcedure: true,
+  includeConsent: false,
+  includeTimeout: false,
   interpretation: {
     kind: "buttonsMulti",
     macroId: "echo_interp",

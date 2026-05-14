@@ -10,6 +10,8 @@ export const gallbladderConfig: ExamConfig = {
   templateParts: [],
   buildNote: buildGallbladderNote,
   showRepeatProcedure: true,
+  includeConsent: false,
+  includeTimeout: false,
   interpretation: { kind: "buttons", macroId: "gb_interp", options: ["Normal", "Cholelithiasis without cholecystitis", "Acute cholecystitis", "Indeterminate"] },
   presets: [
     {

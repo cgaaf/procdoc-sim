@@ -34,6 +34,8 @@ export class ExamState {
       repeatReasons: this.repeatReasons,
       limitationsText: this.limitationsText,
       additionalFindings: this.additionalFindings,
+      includeConsent: this.config.includeConsent,
+      includeTimeout: this.config.includeTimeout,
       macroGet: (id: string) => this.macroSelections.get(id),
       macroGetMulti: (id: string) => this.macroSelections.getMulti(id),
       getComment: (id: string) => this.macroSelections.getComment(id),

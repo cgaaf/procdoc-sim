@@ -10,6 +10,8 @@ export const softTissueConfig: ExamConfig = {
   templateParts: [],
   buildNote: buildSoftTissueNote,
   showRepeatProcedure: true,
+  includeConsent: false,
+  includeTimeout: false,
   interpretation: { kind: "buttons", macroId: "st_interp", options: ["Normal", "Abscess identified", "Cellulitis without abscess", "Foreign body identified", "Indeterminate"] },
   presets: [
     {

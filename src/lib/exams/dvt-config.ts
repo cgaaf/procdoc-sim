@@ -38,6 +38,8 @@ export const dvtConfig: ExamConfig = {
   templateParts: parseTemplate(dvtTemplate),
   buildNote: buildDvtNote,
   showRepeatProcedure: false,
+  includeConsent: false,
+  includeTimeout: false,
   interpretation: { kind: "buttons", macroId: "dvt_interp", options: ["Negative for DVT", "Positive for DVT", "Indeterminate"] },
   presets: [
     {

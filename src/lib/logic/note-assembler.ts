@@ -14,6 +14,10 @@ export interface NoteAssemblerState {
   repeatReasons: Set<string>;
   limitationsText: string;
   additionalFindings: string;
+  /** Whether to render the Consent block. Defaults to true if undefined. */
+  includeConsent?: boolean;
+  /** Whether to render the Time-out line. Defaults to true if undefined. */
+  includeTimeout?: boolean;
   macroGet(macroId: string): string | null;
   macroGetMulti(macroId: string): Set<string>;
   getComment(macroId: string): string;
@@ -28,7 +32,6 @@ export function buildFastNote(state: NoteAssemblerState): NoteSpan[] {
   const hasAbdominal = hasAbdominalFindings(state);
   const hasLungs = hasLungFindings(state);
   const hasAnyFindings = hasCardiac || hasAbdominal || hasLungs;
-  const indication = getIndication(state);
   const interp = state.macroGet("macro_8");
   const interpComment = state.getComment("macro_8");
   const dateTime = getDateTime(state);
@@ -73,10 +76,9 @@ export function buildFastNote(state: NoteAssemblerState): NoteSpan[] {
   }
 
   // Indication
-  if (indication) {
+  if (hasIndicationContent(state, "macro_0")) {
     spans.push({ text: "\n" });
-    spans.push({ text: "Indication: ", bold: true });
-    spans.push({ text: `${indication}\n` });
+    addIndicationLine(state, spans, "macro_0");
   }
 
   // Views obtained
@@ -159,26 +161,7 @@ export function buildFastNote(state: NoteAssemblerState): NoteSpan[] {
 
   // Consent & Standard Precautions
   if (hasAnyFindings) {
-    spans.push({ text: "\n" });
-    spans.push({ text: "Consent and Standard Precautions\n", bold: true, underline: true });
-    spans.push({
-      text:
-        "Consent was obtained verbally from the patient or appropriate guardian. " +
-        "In emergent situations where the patient was unable to provide consent, implied consent was utilized. " +
-        "Informed them of alternatives to comprehensive imaging, limitations of study, " +
-        "possibility of follow up studies required, and possibilities of referral.\n\n",
-    });
-    spans.push({
-      text:
-        "Standard precautions of appropriate PPE and cleaning of the probes per the AIUM and ACEP EUS Guidelines " +
-        "for Infection Control were maintained during the procedure and following its conclusion.\n\n",
-    });
-    spans.push({
-      text:
-        "A time out was performed prior to initiation and all available imaging was done at the bedside and " +
-        "interpreted by the performing clinician. Patient was identified via their wrist band and " +
-        "verbal acknowledgement.\n",
-    });
+    addConsentBlock(spans, state);
   }
 
   // Attestation
@@ -199,7 +182,6 @@ export function buildEchoLungNote(state: NoteAssemblerState): NoteSpan[] {
   const spans: NoteSpan[] = [];
   const dateTime = getDateTime(state);
 
-  const indication = getMultiOrSingle(state, "echo_indication");
   const interp = getMultiOrSingle(state, "echo_interp");
   const interpComment = state.getComment("echo_interp");
   const hasCardiac = hasAnySelection(state, [
@@ -239,9 +221,8 @@ export function buildEchoLungNote(state: NoteAssemblerState): NoteSpan[] {
     spans.push({ text: "\n" });
   }
 
-  if (indication) {
-    spans.push({ text: "Indication: ", bold: true });
-    spans.push({ text: `${indication}\n` });
+  if (hasIndicationContent(state, "echo_indication")) {
+    addIndicationLine(state, spans, "echo_indication");
   }
 
   if (hasFindings) {
@@ -302,7 +283,7 @@ export function buildEchoLungNote(state: NoteAssemblerState): NoteSpan[] {
   }
 
   if (hasFindings) {
-    addConsentBlock(spans);
+    addConsentBlock(spans, state);
     addAttestationBlock(state, spans, dateTime);
   }
 
@@ -315,7 +296,6 @@ export function buildSoftTissueNote(state: NoteAssemblerState): NoteSpan[] {
   const spans: NoteSpan[] = [];
   const dateTime = getDateTime(state);
 
-  const indication = getMultiOrSingle(state, "st_indication");
   const interp = state.macroGet("st_interp");
   const interpComment = state.getComment("st_interp");
   const hasFindings = hasAnySelection(state, [
@@ -333,9 +313,8 @@ export function buildSoftTissueNote(state: NoteAssemblerState): NoteSpan[] {
     spans.push({ text: "  Ultrasound, extremity, non-vascular, limited\n\n" });
   }
 
-  if (indication) {
-    spans.push({ text: "Indication: ", bold: true });
-    spans.push({ text: `${indication}\n` });
+  if (hasIndicationContent(state, "st_indication")) {
+    addIndicationLine(state, spans, "st_indication");
   }
 
   if (hasFindings) {
@@ -369,7 +348,7 @@ export function buildSoftTissueNote(state: NoteAssemblerState): NoteSpan[] {
   }
 
   if (hasFindings) {
-    addConsentBlock(spans);
+    addConsentBlock(spans, state);
     addAttestationBlock(state, spans, dateTime);
   }
 
@@ -382,7 +361,6 @@ export function buildGallbladderNote(state: NoteAssemblerState): NoteSpan[] {
   const spans: NoteSpan[] = [];
   const dateTime = getDateTime(state);
 
-  const indication = getMultiOrSingle(state, "gb_indication");
   const interp = state.macroGet("gb_interp");
   const interpComment = state.getComment("gb_interp");
   const hasFindings = hasAnySelection(state, [
@@ -402,9 +380,8 @@ export function buildGallbladderNote(state: NoteAssemblerState): NoteSpan[] {
     spans.push({ text: "  Ultrasound, abdominal, limited\n\n" });
   }
 
-  if (indication) {
-    spans.push({ text: "Indication: ", bold: true });
-    spans.push({ text: `${indication}\n` });
+  if (hasIndicationContent(state, "gb_indication")) {
+    addIndicationLine(state, spans, "gb_indication");
   }
 
   if (hasFindings) {
@@ -441,7 +418,7 @@ export function buildGallbladderNote(state: NoteAssemblerState): NoteSpan[] {
   }
 
   if (hasFindings) {
-    addConsentBlock(spans);
+    addConsentBlock(spans, state);
     addAttestationBlock(state, spans, dateTime);
   }
 
@@ -454,7 +431,6 @@ export function buildObstetricNote(state: NoteAssemblerState): NoteSpan[] {
   const spans: NoteSpan[] = [];
   const dateTime = getDateTime(state);
 
-  const indication = getMultiOrSingle(state, "ob_indication");
   const interp = state.macroGet("ob_interp");
   const interpComment = state.getComment("ob_interp");
   const hasUterus = hasAnySelection(state, ["ob_iup", "ob_fhr", "ob_number"]);
@@ -470,9 +446,8 @@ export function buildObstetricNote(state: NoteAssemblerState): NoteSpan[] {
     spans.push({ text: "  Ultrasound, pregnant uterus, limited\n\n" });
   }
 
-  if (indication) {
-    spans.push({ text: "Indication: ", bold: true });
-    spans.push({ text: `${indication}\n` });
+  if (hasIndicationContent(state, "ob_indication")) {
+    addIndicationLine(state, spans, "ob_indication");
   }
 
   if (hasFindings) {
@@ -517,7 +492,7 @@ export function buildObstetricNote(state: NoteAssemblerState): NoteSpan[] {
   }
 
   if (hasFindings) {
-    addConsentBlock(spans);
+    addConsentBlock(spans, state);
     addAttestationBlock(state, spans, dateTime);
   }
 
@@ -539,6 +514,25 @@ function hasAnySelection(state: NoteAssemblerState, macroIds: string[]): boolean
     if (state.getComment(id) !== "") return true;
   }
   return false;
+}
+
+function hasIndicationContent(state: NoteAssemblerState, macroId: string): boolean {
+  if (state.macroGetMulti(macroId).size > 0) return true;
+  if (state.macroGet(macroId) != null) return true;
+  if (state.getComment(macroId) !== "") return true;
+  return false;
+}
+
+function addIndicationLine(state: NoteAssemblerState, spans: NoteSpan[], macroId: string) {
+  const multi = state.macroGetMulti(macroId);
+  const single = state.macroGet(macroId);
+  const comment = state.getComment(macroId);
+  let value = "";
+  if (multi.size > 0) value = [...multi].join(", ");
+  else if (single != null) value = single;
+  const suffix = comment ? ` (${comment})` : "";
+  spans.push({ text: "Indication: ", bold: true });
+  spans.push({ text: `${value}${suffix}\n` });
 }
 
 function addProviderBlock(state: NoteAssemblerState, spans: NoteSpan[]) {
@@ -583,27 +577,38 @@ function addMultiFindingLine(
   spans.push({ text: `${label}: ${[...findings].join(", ")}${suffix}\n` });
 }
 
-function addConsentBlock(spans: NoteSpan[]) {
+function addConsentBlock(spans: NoteSpan[], state: NoteAssemblerState) {
+  const includeConsent = state.includeConsent ?? true;
+  const includeTimeout = state.includeTimeout ?? true;
+  if (!includeConsent && !includeTimeout) return;
+
   spans.push({ text: "\n" });
   spans.push({ text: "Consent and Standard Precautions\n", bold: true, underline: true });
-  spans.push({
-    text:
-      "Consent was obtained verbally from the patient or appropriate guardian. " +
-      "In emergent situations where the patient was unable to provide consent, implied consent was utilized. " +
-      "Informed them of alternatives to comprehensive imaging, limitations of study, " +
-      "possibility of follow up studies required, and possibilities of referral.\n\n",
-  });
+
+  if (includeConsent) {
+    spans.push({
+      text:
+        "Consent was obtained verbally from the patient or appropriate guardian. " +
+        "In emergent situations where the patient was unable to provide consent, implied consent was utilized. " +
+        "Informed them of alternatives to comprehensive imaging, limitations of study, " +
+        "possibility of follow up studies required, and possibilities of referral.\n\n",
+    });
+  }
+
   spans.push({
     text:
       "Standard precautions of appropriate PPE and cleaning of the probes per the AIUM and ACEP EUS Guidelines " +
       "for Infection Control were maintained during the procedure and following its conclusion.\n\n",
   });
-  spans.push({
-    text:
-      "A time out was performed prior to initiation and all available imaging was done at the bedside and " +
-      "interpreted by the performing clinician. Patient was identified via their wrist band and " +
-      "verbal acknowledgement.\n",
-  });
+
+  if (includeTimeout) {
+    spans.push({
+      text:
+        "A time out was performed prior to initiation and all available imaging was done at the bedside and " +
+        "interpreted by the performing clinician. Patient was identified via their wrist band and " +
+        "verbal acknowledgement.\n",
+    });
+  }
 }
 
 function addAttestationBlock(state: NoteAssemblerState, spans: NoteSpan[], dateTime: string) {
@@ -633,7 +638,6 @@ export function buildDvtNote(state: NoteAssemblerState): NoteSpan[] {
   const spans: NoteSpan[] = [];
 
   const hasAnyVessel = hasDvtFindings(state);
-  const indication = getDvtIndication(state);
   const side = getDvtDerivedSide(state);
   const interp = state.macroGet("dvt_interp");
   const interpComment = state.getComment("dvt_interp");
@@ -671,9 +675,8 @@ export function buildDvtNote(state: NoteAssemblerState): NoteSpan[] {
   }
 
   // Indication
-  if (indication) {
-    spans.push({ text: "Indication: ", bold: true });
-    spans.push({ text: `${indication}\n` });
+  if (hasIndicationContent(state, "dvt_indication")) {
+    addIndicationLine(state, spans, "dvt_indication");
   }
 
   // Side
@@ -777,26 +780,7 @@ export function buildDvtNote(state: NoteAssemblerState): NoteSpan[] {
 
   // Consent
   if (hasAnyVessel) {
-    spans.push({ text: "\n" });
-    spans.push({ text: "Consent and Standard Precautions\n", bold: true, underline: true });
-    spans.push({
-      text:
-        "Consent was obtained verbally from the patient or appropriate guardian. " +
-        "In emergent situations where the patient was unable to provide consent, implied consent was utilized. " +
-        "Informed them of alternatives to comprehensive imaging, limitations of study, " +
-        "possibility of follow up studies required, and possibilities of referral.\n\n",
-    });
-    spans.push({
-      text:
-        "Standard precautions of appropriate PPE and cleaning of the probes per the AIUM and ACEP EUS Guidelines " +
-        "for Infection Control were maintained during the procedure and following its conclusion.\n\n",
-    });
-    spans.push({
-      text:
-        "A time out was performed prior to initiation and all available imaging was done at the bedside and " +
-        "interpreted by the performing clinician. Patient was identified via their wrist band and " +
-        "verbal acknowledgement.\n",
-    });
+    addConsentBlock(spans, state);
   }
 
   // Attestation
@@ -836,12 +820,6 @@ function hasLungFindings(state: NoteAssemblerState): boolean {
   if (state.getComment("macro_7_left") !== "") return true;
   if (state.getComment("macro_7_right") !== "") return true;
   return false;
-}
-
-function getIndication(state: NoteAssemblerState): string | null {
-  const multi = state.macroGetMulti("macro_0");
-  if (multi.size > 0) return [...multi].join(", ");
-  return state.macroGet("macro_0");
 }
 
 function getViewsObtained(state: NoteAssemblerState): string[] {
@@ -1081,12 +1059,6 @@ export function getDvtDerivedSide(state: NoteAssemblerState): string | null {
   if (hasLeft) return "Left Lower Extremity";
   if (hasRight) return "Right Lower Extremity";
   return null;
-}
-
-function getDvtIndication(state: NoteAssemblerState): string | null {
-  const multi = state.macroGetMulti("dvt_indication");
-  if (multi.size > 0) return [...multi].join(", ");
-  return state.macroGet("dvt_indication");
 }
 
 function addDvtVesselLine(

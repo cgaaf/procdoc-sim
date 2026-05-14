@@ -129,6 +129,8 @@ export const fastConfig: ExamConfig = {
   templateParts: parseTemplate(fastTemplate),
   buildNote: buildFastNote,
   showRepeatProcedure: true,
+  includeConsent: false,
+  includeTimeout: false,
   interpretation: {
     kind: "fast",
     applyNegativeFAST4,

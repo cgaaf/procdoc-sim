@@ -16,6 +16,10 @@ export interface ExamConfig {
   onMacroChange?: (macroId: string, state: ExamState) => void;
   showRepeatProcedure: boolean;
   interpretation: InterpretationConfig;
+  /** Render the Consent paragraph in the generated note. Defaults to true. */
+  includeConsent?: boolean;
+  /** Render the Time-out paragraph in the generated note. Defaults to true. */
+  includeTimeout?: boolean;
 }
 
 export interface ExamPreset {
