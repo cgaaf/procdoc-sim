@@ -12,7 +12,18 @@ export const softTissueConfig: ExamConfig = {
   showRepeatProcedure: true,
   includeConsent: false,
   includeTimeout: false,
-  interpretation: { kind: "buttons", macroId: "st_interp", options: ["Normal", "Abscess identified", "Cellulitis without abscess", "Foreign body identified", "Indeterminate"] },
+  interpretation: {
+    kind: "buttons",
+    macroId: "st_interp",
+    options: [
+      "Normal",
+      "Abscess identified",
+      "Cellulitis without abscess",
+      "Discrete fluid collection seen (not characterized as abscess)",
+      "Foreign body identified",
+      "Indeterminate",
+    ],
+  },
   presets: [
     {
       label: "Normal",

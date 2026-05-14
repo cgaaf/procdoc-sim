@@ -326,6 +326,12 @@ export function buildSoftTissueNote(state: NoteAssemblerState): NoteSpan[] {
     addIndicationLine(state, spans, "st_indication");
   }
 
+  const bodyParts = state.macroGetMulti("st_body_part");
+  if (bodyParts.size > 0) {
+    spans.push({ text: "Body part examined: ", bold: true });
+    spans.push({ text: `${[...bodyParts].join(", ")}\n` });
+  }
+
   if (hasFindings) {
     spans.push({ text: "\n" });
     spans.push({ text: "Findings\n", bold: true, underline: true });

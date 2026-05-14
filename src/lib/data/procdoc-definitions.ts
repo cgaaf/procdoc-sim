@@ -565,6 +565,31 @@ export const softTissueProcdocDefinition: ProcdocDefinition = {
       ],
     },
     {
+      header: "",
+      label: "Body Part",
+      required: true,
+      findings: [
+        {
+          kind: "buttonGroup",
+          macroId: "st_body_part",
+          options: [
+            "Head/Neck",
+            "Chest",
+            "Back",
+            "Abdomen",
+            "Upper extremity - shoulder/arm",
+            "Upper extremity - forearm/hand",
+            "Lower extremity - hip/thigh",
+            "Lower extremity - leg/foot",
+            "Groin/perineum",
+          ],
+          multiSelect: true,
+          exclusiveOptions: new Set(),
+          commentable: true,
+        },
+      ],
+    },
+    {
       header: "Soft Tissue Findings",
       required: false,
       layout: "vertical",
