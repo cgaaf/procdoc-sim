@@ -627,10 +627,10 @@ const DVT_ALL_VESSEL_IDS = [...DVT_LEFT_VESSEL_IDS, ...DVT_RIGHT_VESSEL_IDS];
 
 const DVT_VESSEL_LABELS: Record<string, string> = {
   dvt_cfv_left: "left common femoral vein",
-  dvt_sfj_left: "left saphenofemoral junction",
+  dvt_sfj_left: "left femoral vein",
   dvt_pop_left: "left popliteal vein",
   dvt_cfv_right: "right common femoral vein",
-  dvt_sfj_right: "right saphenofemoral junction",
+  dvt_sfj_right: "right femoral vein",
   dvt_pop_right: "right popliteal vein",
 };
 
@@ -692,7 +692,8 @@ export function buildDvtNote(state: NoteAssemblerState): NoteSpan[] {
   if (hasAnyVessel) {
     spans.push({ text: "\n" });
     spans.push({
-      text: "Two-point compression with color flow Doppler was utilized for evaluation.\n",
+      text:
+        "Extended compression ultrasound (ECUS) with color flow Doppler was utilized for evaluation.\n",
     });
   }
 
@@ -708,14 +709,14 @@ export function buildDvtNote(state: NoteAssemblerState): NoteSpan[] {
       spans.push({ text: "\n" });
       spans.push({ text: "  Left Lower Extremity:\n", bold: true });
       addDvtVesselLine(state, spans, "dvt_cfv_left", "Common Femoral Vein");
-      addDvtVesselLine(state, spans, "dvt_sfj_left", "Saphenofemoral Junction");
+      addDvtVesselLine(state, spans, "dvt_sfj_left", "Femoral Vein");
       addDvtVesselLine(state, spans, "dvt_pop_left", "Popliteal Vein");
     }
     if (hasRight) {
       spans.push({ text: "\n" });
       spans.push({ text: "  Right Lower Extremity:\n", bold: true });
       addDvtVesselLine(state, spans, "dvt_cfv_right", "Common Femoral Vein");
-      addDvtVesselLine(state, spans, "dvt_sfj_right", "Saphenofemoral Junction");
+      addDvtVesselLine(state, spans, "dvt_sfj_right", "Femoral Vein");
       addDvtVesselLine(state, spans, "dvt_pop_right", "Popliteal Vein");
     }
   }

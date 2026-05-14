@@ -155,9 +155,8 @@ export const fastProcdocDefinition: ProcdocDefinition = {
 
 export const dvtProcdocDefinition: ProcdocDefinition = {
   findingsHelperText:
-    "Compression views required at the inguinal crease (common femoral vein " +
-    "and saphenofemoral junction) and the popliteal fossa (proximal, mid, " +
-    "and distal). Veins should be completely collapsible with minimal " +
+    "Extended compression ultrasound (ECUS) of the common femoral, femoral, " +
+    "and popliteal veins. Veins should be completely collapsible with minimal " +
     "pressure and no echogenic material within.",
   sections: [],
   limitationOptions: [
@@ -201,7 +200,7 @@ export const dvtProcdocDefinition: ProcdocDefinition = {
         },
         {
           kind: "buttonGroup",
-          label: "SFJ",
+          label: "Femoral",
           macroId: "dvt_sfj_left",
           options: ["Completely compressible", "Incompletely compressible", "Clot seen within the vein", "Not obtained", "Indeterminate"],
           multiSelect: false,
@@ -235,7 +234,7 @@ export const dvtProcdocDefinition: ProcdocDefinition = {
         },
         {
           kind: "buttonGroup",
-          label: "SFJ",
+          label: "Femoral",
           macroId: "dvt_sfj_right",
           options: ["Completely compressible", "Incompletely compressible", "Clot seen within the vein", "Not obtained", "Indeterminate"],
           multiSelect: false,
