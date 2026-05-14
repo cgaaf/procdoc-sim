@@ -450,7 +450,12 @@ export function buildObstetricNote(state: NoteAssemblerState): NoteSpan[] {
   const interpComment = state.getComment("ob_interp");
   const hasUterus = hasAnySelection(state, ["ob_iup", "ob_fhr", "ob_number"]);
   const hasPelvis = hasAnySelection(state, ["ob_free_fluid", "ob_adnexal"]);
-  const hasFindings = hasUterus || hasPelvis;
+  const hasBiometry =
+    state.macroGet("ob_trimester") != null ||
+    state.macroGetMulti("ob_biometry").size > 0 ||
+    state.getComment("ob_trimester") !== "" ||
+    state.getComment("ob_biometry") !== "";
+  const hasFindings = hasUterus || hasPelvis || hasBiometry;
 
   spans.push({ text: "Ultrasound - Point of Care", bold: true });
   spans.push({ text: "\n\n" });
@@ -483,6 +488,13 @@ export function buildObstetricNote(state: NoteAssemblerState): NoteSpan[] {
     spans.push({ text: "Pelvis:\n", bold: true });
     addSimpleFindingLine(state, spans, "ob_free_fluid", "Free Fluid");
     addSimpleFindingLine(state, spans, "ob_adnexal", "Adnexal Mass");
+  }
+
+  if (hasBiometry) {
+    spans.push({ text: "\n" });
+    spans.push({ text: "Fetal Biometry:\n", bold: true });
+    addSimpleFindingLine(state, spans, "ob_trimester", "Trimester");
+    addMultiFindingLine(state, spans, "ob_biometry", "Measurements used");
   }
 
   if (hasFindings) {
