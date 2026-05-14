@@ -130,4 +130,3 @@
     onclose={() => (commentModalOpen = false)}
   />
 {/if}
-

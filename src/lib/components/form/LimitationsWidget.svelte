@@ -17,7 +17,10 @@
 
   let interpCommentOpen = $state(false);
   let interpMacroId = $derived.by(() => {
-    if (interpretation.kind === "buttons" || interpretation.kind === "buttonsMulti") {
+    if (
+      interpretation.kind === "buttons" ||
+      interpretation.kind === "buttonsMulti"
+    ) {
       return interpretation.macroId;
     }
     if (interpretation.kind === "fast") return "macro_8";
@@ -36,7 +39,6 @@
       })),
     ];
   });
-
 
   function handleNoneTap() {
     for (const opt of [...appState.selectedLimitations]) {
@@ -93,7 +95,9 @@
         stroke-width="1.5"
         class="h-[18px] w-[18px]"
       >
-        <path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" />
+        <path
+          d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"
+        />
         <polyline points="14 2 14 8 20 8" />
         <line x1="8" y1="13" x2="16" y2="13" />
         <line x1="8" y1="17" x2="16" y2="17" />
@@ -107,7 +111,9 @@
         stroke-width="1.5"
         class="h-[18px] w-[18px]"
       >
-        <path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" />
+        <path
+          d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"
+        />
         <polyline points="14 2 14 8 20 8" />
       </svg>
     {/if}
@@ -155,7 +161,9 @@
     </p>
     <div class="mt-1">
       {#if interpretation.kind === "buttons"}
-        {@const currentValue = appState.macroSelections.get(interpretation.macroId)}
+        {@const currentValue = appState.macroSelections.get(
+          interpretation.macroId,
+        )}
         <div class="flex flex-wrap items-center gap-1">
           {#each interpretation.options as option (option)}
             {@const isSelected = currentValue === option}
@@ -184,7 +192,9 @@
           {@render interpCommentIcon()}
         </div>
       {:else if interpretation.kind === "buttonsMulti"}
-        {@const selected = appState.macroSelections.getMulti(interpretation.macroId)}
+        {@const selected = appState.macroSelections.getMulti(
+          interpretation.macroId,
+        )}
         <div class="flex flex-wrap items-center gap-1">
           {#each interpretation.options as option (option)}
             {@const isSelected = selected.has(option)}
@@ -208,7 +218,8 @@
                   next.clear();
                   next.add(option);
                 } else {
-                  for (const ex of interpretation.exclusiveOptions) next.delete(ex);
+                  for (const ex of interpretation.exclusiveOptions)
+                    next.delete(ex);
                   next.add(option);
                 }
                 appState.setMultiMacroSelection(interpretation.macroId, next);

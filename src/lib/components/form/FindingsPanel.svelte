@@ -33,6 +33,10 @@
     findingsGroups.filter((g) => g.defaultCollapsed).map((g) => g.header),
   );
 
+  let firstHeaderlessIndex = $derived(
+    findingsGroups.findIndex((g) => g.header === ""),
+  );
+
   function toggleCollapse(header: string) {
     if (collapsed.has(header)) {
       collapsed.delete(header);
@@ -87,7 +91,10 @@
   {/if}
 {/snippet}
 
-{#snippet findingsContent(items: FindingsItem[], layout?: "vertical" | "columns")}
+{#snippet findingsContent(
+  items: FindingsItem[],
+  layout?: "vertical" | "columns",
+)}
   {#if hasSubHeaders(items)}
     {@const columns = splitBySubHeader(items)}
     <div class={layout === "vertical" ? "pl-5" : "flex gap-2 pl-5"}>
@@ -166,7 +173,7 @@
             {@render findingsItem(item)}
           {/each}
         </div>
-        {#if showRepeatProcedure}
+        {#if showRepeatProcedure && i === firstHeaderlessIndex}
           <RepeatProcedureWidget />
         {/if}
       {:else}

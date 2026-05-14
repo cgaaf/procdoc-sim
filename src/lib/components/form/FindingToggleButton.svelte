@@ -23,11 +23,15 @@
   let isSelected = $derived(currentState !== "none");
 
   let bgColor = $derived(
-    isSelected ? "var(--color-btn-selected-bg)" : "var(--color-finding-null-bg)",
+    isSelected
+      ? "var(--color-btn-selected-bg)"
+      : "var(--color-finding-null-bg)",
   );
 
   let borderColor = $derived(
-    isSelected ? "var(--color-btn-selected-border)" : "var(--color-finding-null-border)",
+    isSelected
+      ? "var(--color-btn-selected-border)"
+      : "var(--color-finding-null-border)",
   );
 
   let commentModalOpen = $state(false);
@@ -83,10 +87,23 @@
     {@const positiveValue = finding.presentOptions[0]}
     {@const negativeValue = finding.absentOption}
     {@const indeterminateValue = "Indeterminate"}
-    {@const labels = finding.triStateLabels ?? { present: "Positive", absent: "Negative", indeterminate: "Indeterminate" }}
+    {@const labels = finding.triStateLabels ?? {
+      present: "Positive",
+      absent: "Negative",
+      indeterminate: "Indeterminate",
+    }}
     {@const buttons = finding.naOption
-      ? [[negativeValue, labels.absent], [positiveValue, labels.present], [indeterminateValue, labels.indeterminate], [finding.naOption, finding.naOption]]
-      : [[negativeValue, labels.absent], [positiveValue, labels.present], [indeterminateValue, labels.indeterminate]]}
+      ? [
+          [negativeValue, labels.absent],
+          [positiveValue, labels.present],
+          [indeterminateValue, labels.indeterminate],
+          [finding.naOption, finding.naOption],
+        ]
+      : [
+          [negativeValue, labels.absent],
+          [positiveValue, labels.present],
+          [indeterminateValue, labels.indeterminate],
+        ]}
     <div class="flex w-[340px] gap-[3px]">
       {#each buttons as [value, label] (value)}
         <button
@@ -115,10 +132,12 @@
       <!-- Plus button -->
       <button
         class="flex h-[30px] w-[28px] shrink-0 items-center justify-center border-x-[0.5px]"
-        style:background-color={currentState === "present" || currentState === "indeterminate"
+        style:background-color={currentState === "present" ||
+        currentState === "indeterminate"
           ? "var(--color-btn-selected-bg)"
           : "transparent"}
-        style:border-color={currentState === "present" || currentState === "indeterminate"
+        style:border-color={currentState === "present" ||
+        currentState === "indeterminate"
           ? "var(--color-btn-selected-border)"
           : "var(--color-finding-null-border)"}
         onclick={onPresentTap}
@@ -136,9 +155,7 @@
       <div
         class="flex flex-1 items-center justify-center overflow-hidden px-2 py-1.5 text-center font-epic text-[11px] font-semibold"
         style:background-color={bgColor}
-        style:color={isSelected
-          ? "var(--color-btn-selected-text)"
-          : "#757575"}
+        style:color={isSelected ? "var(--color-btn-selected-text)" : "#757575"}
       >
         <span class="truncate">{finding.findingLabel}</span>
       </div>
