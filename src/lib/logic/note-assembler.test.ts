@@ -57,7 +57,7 @@ describe("Consent & Timeout flags (cross-cutting B)", () => {
 
   it("Soft Tissue: omits consent + timeout when both flags are false", () => {
     const state = makeMockState({
-      macros: { st_collection: "No fluid collection" },
+      macros: { st_collection: "Absent" },
       includeConsent: false,
       includeTimeout: false,
     });
@@ -166,7 +166,7 @@ describe("Soft Tissue note builder", () => {
   it("emits body part(s) examined in findings header block", () => {
     const state = makeMockState({
       macrosMulti: { st_body_part: ["Lower extremity - leg/foot"] },
-      macros: { st_collection: "No fluid collection" },
+      macros: { st_collection: "Absent" },
     });
     const text = spansToText(buildSoftTissueNote(state));
     expect(text).toContain("Body part examined: Lower extremity - leg/foot");
@@ -177,7 +177,7 @@ describe("Obstetric note builder", () => {
   it("emits Fetal Biometry block when group has selections", () => {
     const state = makeMockState({
       macros: {
-        ob_iup: "Definite IUP (yolk sac and/or fetal pole)",
+        ob_iup: "Definite IUP",
         ob_trimester: "First",
       },
       macrosMulti: {

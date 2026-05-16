@@ -600,13 +600,18 @@ export const softTissueProcdocDefinition: ProcdocDefinition = {
       layout: "vertical",
       findings: [
         {
-          kind: "buttonGroup",
+          kind: "findingRow",
           label: "Fluid Collection",
+          findingLabel: "Discrete fluid collection",
           macroId: "st_collection",
-          options: ["No fluid collection", "Present - drainable", "Present - not drainable", "Indeterminate"],
-          multiSelect: false,
-          exclusiveOptions: new Set(),
-          commentable: true,
+          presentOptions: ["Present"],
+          absentOption: "Absent",
+          triState: true,
+          triStateLabels: {
+            present: "Fluid Collection",
+            absent: "No Fluid Collection",
+            indeterminate: "Indeterminate",
+          },
         },
         {
           kind: "findingRow",
@@ -776,7 +781,7 @@ export const obstetricProcdocDefinition: ProcdocDefinition = {
           label: "IUP",
           macroId: "ob_iup",
           options: [
-            "Definite IUP (yolk sac and/or fetal pole)",
+            "Definite IUP",
             "No IUP visualized",
             "Indeterminate",
           ],
@@ -847,7 +852,7 @@ export const obstetricProcdocDefinition: ProcdocDefinition = {
           commentable: true,
           visibleWhen: {
             macroId: "ob_iup",
-            value: "Definite IUP (yolk sac and/or fetal pole)",
+            value: "Definite IUP",
           },
         },
         {
@@ -866,7 +871,7 @@ export const obstetricProcdocDefinition: ProcdocDefinition = {
           commentable: true,
           visibleWhen: {
             macroId: "ob_iup",
-            value: "Definite IUP (yolk sac and/or fetal pole)",
+            value: "Definite IUP",
           },
         },
       ],
