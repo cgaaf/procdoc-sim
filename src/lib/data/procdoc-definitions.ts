@@ -94,18 +94,18 @@ export const fastProcdocDefinition: ProcdocDefinition = {
           kind: "buttonGroup",
           label: "Left Hemithorax",
           macroId: "macro_7_left",
-          options: ["Normal Lung Slide", "Negative lung sliding", "Pleural effusion", "Indeterminate"],
+          options: ["Normal Lung Slide", "Negative lung sliding", "Pleural effusion", "Not obtained", "Indeterminate"],
           multiSelect: true,
-          exclusiveOptions: new Set(["Normal Lung Slide", "Indeterminate"]),
+          exclusiveOptions: new Set(["Normal Lung Slide", "Not obtained", "Indeterminate"]),
           commentable: true,
         },
         {
           kind: "buttonGroup",
           label: "Right Hemithorax",
           macroId: "macro_7_right",
-          options: ["Normal Lung Slide", "Negative lung sliding", "Pleural effusion", "Indeterminate"],
+          options: ["Normal Lung Slide", "Negative lung sliding", "Pleural effusion", "Not obtained", "Indeterminate"],
           multiSelect: true,
-          exclusiveOptions: new Set(["Normal Lung Slide", "Indeterminate"]),
+          exclusiveOptions: new Set(["Normal Lung Slide", "Not obtained", "Indeterminate"]),
           commentable: true,
         },
       ],
@@ -637,12 +637,10 @@ export const softTissueProcdocDefinition: ProcdocDefinition = {
 
 export const gallbladderProcdocDefinition: ProcdocDefinition = {
   findingsHelperText:
-    "RUQ evaluation. Curvilinear probe is preferred; phased array may be " +
-    "substituted for improved maneuverability between ribs. Evaluate " +
-    "gallbladder for stones, wall thickening (>3 mm), pericholecystic " +
-    "fluid, and sonographic Murphy's sign. Measure CBD if visualized — " +
-    "normal <6 mm, with an age-adjusted threshold of +1 mm per decade " +
-    "after age 60.",
+    "RUQ evaluation. Evaluate gallbladder for stones, wall thickening " +
+    "(>3 mm), pericholecystic fluid, and sonographic Murphy's sign. " +
+    "Measure CBD if visualized — normal <6 mm, with an age-adjusted " +
+    "threshold of +1 mm per decade after age 60.",
   sections: [],
   limitationOptions: [
     ...STANDARD_LIMITATIONS,

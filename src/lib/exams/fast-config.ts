@@ -46,6 +46,14 @@ function isCardiacNegative(state: ExamState): boolean {
   return m3 === "Negative" || m3b === "Negative";
 }
 
+function isCardiacNotObtained(state: ExamState): boolean {
+  const m3 = state.macroSelections.get("macro_3");
+  const m3b = state.macroSelections.get("macro_3b");
+  const m3Missing = m3 === null || m3 === undefined || m3 === "Not obtained";
+  const m3bMissing = m3b === null || m3b === undefined || m3b === "Not obtained";
+  return m3Missing && m3bMissing;
+}
+
 function isAbdominalAllNegative(state: ExamState): boolean {
   return (
     state.macroSelections.get("macro_4") === "Negative" &&
@@ -78,6 +86,8 @@ function updateFastInterpretation(state: ExamState) {
     state.macroSelections.set("macro_8", "E-FAST Negative x 5");
   } else if (isCardiacNegative(state) && isAbdominalAllNegative(state)) {
     state.macroSelections.set("macro_8", "FAST Negative x 4");
+  } else if (isCardiacNotObtained(state) && isAbdominalAllNegative(state)) {
+    state.macroSelections.set("macro_8", "FAST Negative x 3");
   } else {
     state.macroSelections.set("macro_8", null);
   }

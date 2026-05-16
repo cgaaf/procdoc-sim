@@ -869,8 +869,12 @@ function getViewsObtained(state: NoteAssemblerState): string[] {
   if (state.macroGet("macro_4") != null) views.push("RUQ (Morrison's Pouch)");
   if (state.macroGet("macro_5") != null) views.push("LUQ (Splenorenal)");
   if (state.macroGet("macro_6") != null) views.push("Bladder (Suprapubic)");
-  if (state.macroGetMulti("macro_7_left").size > 0) views.push("Left hemithorax");
-  if (state.macroGetMulti("macro_7_right").size > 0) views.push("Right hemithorax");
+  if (hasSubstantiveLungFindings(state.macroGetMulti("macro_7_left"))) {
+    views.push("Left hemithorax");
+  }
+  if (hasSubstantiveLungFindings(state.macroGetMulti("macro_7_right"))) {
+    views.push("Right hemithorax");
+  }
 
   return views;
 }
@@ -987,7 +991,18 @@ function addThoracicSideLine(
     return;
   }
 
+  if (findings.size === 1 && findings.has("Not obtained")) {
+    spans.push({ text: `${sideLabel} view not obtained${suffix}\n` });
+    return;
+  }
+
   spans.push({ text: `${sideLabel}: ${formatLungFindings(findings)}${suffix}\n` });
+}
+
+function hasSubstantiveLungFindings(findings: Set<string>): boolean {
+  if (findings.size === 0) return false;
+  if (findings.size === 1 && findings.has("Not obtained")) return false;
+  return true;
 }
 
 function formatLungFindings(findings: Set<string>): string {
