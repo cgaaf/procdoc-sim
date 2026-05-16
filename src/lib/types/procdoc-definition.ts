@@ -49,8 +49,11 @@ export interface FindingsSubHeader {
 
 /** Condition controlling whether a findings item is visible based on another macro's value */
 export interface VisibilityCondition {
-  macroId: string;
+  /** One or more macro IDs to check. If an array, the condition matches when ANY listed macro satisfies it. */
+  macroId: string | string[];
   value: string;
+  /** When true, check whether the macro's multi-select set contains `value`; otherwise check single-select equality. */
+  multi?: boolean;
 }
 
 export interface FindingRow {

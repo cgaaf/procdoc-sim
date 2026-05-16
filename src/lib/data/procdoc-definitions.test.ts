@@ -123,6 +123,15 @@ describe("Lung definition", () => {
       for (const opt of expected) expect(bg.options).toContain(opt);
     }
   });
+
+  it("B-lines Pattern is gated on B-lines selected in either lung", () => {
+    const bg = findButtonGroup(echolungProcdocDefinition, "echo_lung_blines_pattern");
+    expect(bg.visibleWhen).toEqual({
+      macroId: ["echo_lung_left", "echo_lung_right"],
+      value: "B-lines (≥3 per field)",
+      multi: true,
+    });
+  });
 });
 
 describe("Soft Tissue definition", () => {

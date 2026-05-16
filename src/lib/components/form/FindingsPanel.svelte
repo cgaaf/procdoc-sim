@@ -49,7 +49,11 @@
     if (item.kind !== "findingRow" && item.kind !== "buttonGroup") return true;
     const cond = item.visibleWhen;
     if (!cond) return true;
-    return appState.macroSelections.get(cond.macroId) === cond.value;
+    const ids = Array.isArray(cond.macroId) ? cond.macroId : [cond.macroId];
+    if (cond.multi) {
+      return ids.some((id) => appState.macroSelections.getMulti(id).has(cond.value));
+    }
+    return ids.some((id) => appState.macroSelections.get(id) === cond.value);
   }
 
   function hasSubHeaders(items: FindingsItem[]): boolean {

@@ -533,6 +533,11 @@ export const echolungProcdocDefinition: ProcdocDefinition = {
           multiSelect: false,
           exclusiveOptions: new Set(),
           commentable: true,
+          visibleWhen: {
+            macroId: ["echo_lung_left", "echo_lung_right"],
+            value: "B-lines (≥3 per field)",
+            multi: true,
+          },
         },
       ],
     },
