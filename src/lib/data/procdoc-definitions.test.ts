@@ -165,10 +165,10 @@ describe("Gallbladder definition", () => {
 });
 
 describe("OB/Pelvic definition", () => {
-  it("ob_iup options remove Probable IUP and include criteria suffix on Definite IUP", () => {
+  it("ob_iup options remove Probable IUP and include Definite IUP", () => {
     const bg = findButtonGroup(obstetricProcdocDefinition, "ob_iup");
     expect(bg.options.some((o) => /probable iup/i.test(o))).toBe(false);
-    expect(bg.options).toContain("Definite IUP (yolk sac and/or fetal pole)");
+    expect(bg.options).toContain("Definite IUP");
   });
 
   it("ob_free_fluid contains 'Small amount' between Absent and Present", () => {
@@ -192,7 +192,7 @@ describe("OB/Pelvic definition", () => {
     if (!trimester) throw new Error("trimester missing");
     expect(trimester.visibleWhen).toEqual({
       macroId: "ob_iup",
-      value: "Definite IUP (yolk sac and/or fetal pole)",
+      value: "Definite IUP",
     });
     expect(trimester.commentable).toBe(true);
     const measurements = g.findings.find(

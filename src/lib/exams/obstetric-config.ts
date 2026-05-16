@@ -17,7 +17,7 @@ export const obstetricConfig: ExamConfig = {
     {
       label: "IUP Confirmed",
       apply: (state) => {
-        state.macroSelections.setIfEmpty("ob_iup", "Definite IUP (yolk sac and/or fetal pole)");
+        state.macroSelections.setIfEmpty("ob_iup", "Definite IUP");
         state.macroSelections.setIfEmpty("ob_fhr", "Present");
         state.macroSelections.setIfEmpty("ob_number", "Singleton");
         state.macroSelections.setIfEmpty("ob_free_fluid", "Absent");

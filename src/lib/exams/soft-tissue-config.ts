@@ -28,7 +28,7 @@ export const softTissueConfig: ExamConfig = {
     {
       label: "Normal",
       apply: (state) => {
-        state.macroSelections.setIfEmpty("st_collection", "No fluid collection");
+        state.macroSelections.setIfEmpty("st_collection", "Absent");
         state.macroSelections.setIfEmpty("st_foreign_body", "Not visualized");
         state.macroSelections.setIfEmpty("st_cobblestone", "Absent");
         state.macroSelections.setIfEmpty("st_interp", "Normal");
@@ -37,7 +37,6 @@ export const softTissueConfig: ExamConfig = {
     {
       label: "Abscess",
       apply: (state) => {
-        state.macroSelections.setIfEmpty("st_collection", "Present - drainable");
         state.macroSelections.setIfEmpty("st_cobblestone", "Present");
         state.macroSelections.setIfEmpty("st_interp", "Abscess identified");
       },
@@ -45,7 +44,7 @@ export const softTissueConfig: ExamConfig = {
     {
       label: "Cellulitis",
       apply: (state) => {
-        state.macroSelections.setIfEmpty("st_collection", "No fluid collection");
+        state.macroSelections.setIfEmpty("st_collection", "Absent");
         state.macroSelections.setIfEmpty("st_cobblestone", "Present");
         state.macroSelections.setIfEmpty("st_interp", "Cellulitis without abscess");
       },
