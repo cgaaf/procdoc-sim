@@ -145,7 +145,7 @@ describe("DVT note builder", () => {
 });
 
 describe("Echo/Lung note builder", () => {
-  it("emits zones imaged per side and B-lines pattern qualifier in interpretation", () => {
+  it("emits zones imaged per side and B-lines pattern in interpretation", () => {
     const state = makeMockState({
       macrosMulti: {
         echo_lung_zones_right: ["Upper anterior (zone 1)", "Lower lateral (zone 4)"],
@@ -153,7 +153,7 @@ describe("Echo/Lung note builder", () => {
         echo_interp: ["Pulmonary edema"],
       },
       macros: {
-        echo_lung_blines_pattern: "Diffuse B-lines (suggestive of pulmonary edema / cardiogenic)",
+        echo_lung_blines_pattern: "Diffuse B-lines",
       },
     });
     const text = spansToText(buildEchoLungNote(state));

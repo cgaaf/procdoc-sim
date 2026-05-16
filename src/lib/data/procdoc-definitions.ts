@@ -526,8 +526,8 @@ export const echolungProcdocDefinition: ProcdocDefinition = {
           label: "B-lines Pattern",
           macroId: "echo_lung_blines_pattern",
           options: [
-            "Diffuse B-lines (suggestive of pulmonary edema / cardiogenic)",
-            "Focal B-lines (suggestive of pneumonia / contusion)",
+            "Diffuse B-lines",
+            "Focal B-lines",
             "No B-lines",
           ],
           multiSelect: false,
